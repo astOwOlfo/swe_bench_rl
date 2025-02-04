@@ -26,7 +26,7 @@ uv run ray job submit --address="http://127.0.0.1:8265" \
   --vllm_tensor_parallel_size 1 \
   --colocate_actor_ref \
   --pretrain deepseek-ai/DeepSeek-R1-Distill-Qwen-7B \
-  --save_path /data1/joey/deepseek-tests/checkpoint/test-ppo-ray \
+  --save_path checkpoint/dummy_rl \
   --micro_train_batch_size 4 \
   --train_batch_size 48 \
   --micro_rollout_batch_size 12 \
@@ -50,8 +50,7 @@ uv run ray job submit --address="http://127.0.0.1:8265" \
   --flash_attn \
   --gradient_checkpointing \
   --use_wandb $WANDB_API_KEY \
-  --wandb_project math_rl \
+  --wandb_project dummy_rl \
   --advantage_estimator grpo \
-  --remote_rm_url http://localhost:5000/get_reward \
   --env_file dummy_env \
   --env_class DummyEnv \
