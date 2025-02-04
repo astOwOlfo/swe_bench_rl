@@ -1,0 +1,31 @@
+[project]
+name = "dummy_rl_train"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "torch==2.5.1",
+    "openrlhf[vllm_latest]",
+    "ray[train]>=2.12.0",
+    "datasets>=3.2.0",
+    "mypy>=1.14.1",
+]
+
+[build-system]
+requires = ["setuptools", "wheel", "torch>=2.5.1"]
+
+#[tool.uv]
+#cache-dir = "/data1/joey/uv_cache"
+
+#[tool.pytorch-extensions]
+#build-directory = "/data1/joey/torch_extensions"
+
+#[tool.deepspeed]
+#extra-compile-args = ["-ftemporary-directory=/data1/joey/tmp"]
+
+[tool.setuptools]
+packages = []
+
+[tool.uv.sources]
+openrlhf = { git = "https://github.com/JYudelson1/OpenRLHF-reward-hacking"}
