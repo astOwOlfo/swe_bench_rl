@@ -1,3 +1,5 @@
 .venv
 dummy_rl_train.egg-info/
 uv.lock
+.env
+checkpoint/
