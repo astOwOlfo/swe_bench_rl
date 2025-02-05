@@ -12,7 +12,7 @@ class DummyEnv(AgentInterface):
         super().__init__(*args, **kwargs)
     
     def init_state(self, data: dict) -> AgentState:
-        return (0, data["input_prompt"][0])
+        return (0, data["input"][0])
     
     def get_next_prompt(self, messages: List[Message], state: AgentState) -> Tuple[Message, AgentState]:
         if state[0] == 0:
