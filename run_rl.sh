@@ -17,9 +17,9 @@ uv run ray job submit --address="http://127.0.0.1:8265" \
   --pretrain Qwen/Qwen2.5-Coder-1.5B-Instruct \
   --save_path checkpoint/dummy_rl \
   --micro_train_batch_size 1 \
-  --train_batch_size 48 \
-  --micro_rollout_batch_size 12 \
-  --rollout_batch_size 48 \
+  --train_batch_size 2 \
+  --micro_rollout_batch_size 2 \
+  --rollout_batch_size 2 \
   --n_samples_per_prompt 3 \
   --max_samples 10000 \
   --max_epochs 3 \

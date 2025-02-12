@@ -5,12 +5,13 @@ from inspect_evals.swe_bench.scorers import (
 )
 from inspect_ai.solver import TaskState
 from docker.client import DockerClient
-from docker.models.containers import Container
+# from docker.models.containers import Container
 from datasets import load_dataset
 from uuid import uuid4
 import logging
 import json
 import base64
+import subprocess
 from dataclasses import dataclass
 from collections.abc import Iterable
 from typing import Any, ContextManager
@@ -18,6 +19,53 @@ from beartype import beartype
 
 from .threaded_map import delayed, threaded_map
 from .agent import Tool
+
+
+@beartype
+@dataclass
+class ExecResult:
+    exit_code: int
+    output: bytes # both stdout and stderr
+
+
+@beartype
+@dataclass
+class Container:
+    name: str
+    
+    def exec_run(self, command: str | list[str]) -> ExecResult:
+        # Convert command to list if it's a string
+        if isinstance(command, str):
+            cmd_list = ['docker', 'exec', self.name, 'sh', '-c', command]
+        else:
+            cmd_list = ['docker', 'exec', self.name] + command
+            
+        # Run the command and capture both stdout and stderr
+        result = subprocess.run(
+            cmd_list,
+            capture_output=True,  # capture both stdout and stderr
+            check=False  # don't raise exception on non-zero exit code
+        )
+        
+        # Combine stdout and stderr
+        output = result.stdout + result.stderr
+        
+        return ExecResult(
+            exit_code=result.returncode,
+            output=output
+        )
+
+    def stop(self) -> ExecResult:
+        result = subprocess.run(
+            ['docker', 'stop', self.name],
+            capture_output=True,
+            check=False
+        )
+        
+        return ExecResult(
+            exit_code=result.returncode,
+            output=result.stdout + result.stderr
+        )
 
 
 @beartype
@@ -54,9 +102,6 @@ class SweBenchEvaluator(ContextManager):
     ```
     """
 
-    docker_client: DockerClient
-    """The docker client that was used for creating the environments."""
-
     containers: list[Container]
     """Docker containers with the SWE Bench environments. At initialization, the containers whose builds fail would be excluded from this list."""
 
@@ -88,13 +133,9 @@ class SweBenchEvaluator(ContextManager):
             datapoint["problem_statement"] for datapoint in self.dataset
         ]
 
-        self.docker_client = DockerClient.from_env()
+        self._build_and_start_containers()
 
-        self._build_containers()
-
-        self._start_containers()
-
-    def _build_containers(self) -> None:
+    def _build_and_start_containers(self) -> None:
         """
         print("WARNING: REMOVING ALL EXISTING DOCKER CONTAINERS!!!!")
         for container in self.docker_client.containers.list(all=True):
@@ -105,9 +146,11 @@ class SweBenchEvaluator(ContextManager):
                 container.remove(force=True)
         """
 
+        docker_client = DockerClient.from_env()
+
         unique_identifier = "---" + str(uuid4())
         successfully_built, failed_build = build_instance_images(
-            client=self.docker_client,
+            client=docker_client,
             dataset=[
                 datapoint
                 | {"instance_id": datapoint["instance_id"] + unique_identifier}
@@ -126,11 +169,11 @@ class SweBenchEvaluator(ContextManager):
                 f"WARNING: EXCLUDING {len(failed_build)} DATAPOINTS BECAUSE BUILDING DOCKER CONTAINERS FOR THEM FAILED."
             )
 
-        self.containers = threaded_map(
+        containers = threaded_map(
             (
                 delayed(build_container)(
                     test_spec=test_spec,
-                    client=self.docker_client,
+                    client=docker_client,
                     run_id="run",
                     logger=logging.getLogger(__name__),
                     nocache=False,
@@ -153,12 +196,13 @@ class SweBenchEvaluator(ContextManager):
             for test_spec in successfully_built
         ]
 
-    def _start_containers(self) -> None:
         threaded_map(
-            (delayed(container.start)() for container in self.containers),
+            (delayed(container.start)() for container in containers),
             max_workers=self.max_workers,
             tqdm_description="starting containers",
         )
+
+        self.containers = [Container(name=container.name) for container in containers]
 
     def _stop_containers(self) -> None:
         threaded_map(

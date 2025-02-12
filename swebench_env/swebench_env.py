@@ -41,6 +41,7 @@ class SweBenchEnv(AgentInterface):
         can_finish: bool = True,
         **kwargs,
     ):
+        assert False
         super().__init__(*args, **kwargs)
         self.max_steps = max_steps
         self.can_finish = can_finish
@@ -49,7 +50,7 @@ class SweBenchEnv(AgentInterface):
         evaluator = SweBenchEvaluator(dataset=[data], max_workers=1)
         evaluator.__enter__()
 
-        tools: list[Tool] = [BashTool(evaluator.containers[0])] if len(evaluator.contianers) > 0 else []
+        tools: list[Tool] = [BashTool(evaluator.containers[0])] if len(evaluator.containers) > 0 else []
         if self.can_finish:
             tools.append(FinishTool())
 
