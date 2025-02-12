@@ -37,7 +37,7 @@ class SweBenchEnv(AgentInterface):
     def __init__(
         self,
         *args,
-        max_steps: int = 2,
+        max_steps: int = 4,
         can_finish: bool = True,
         **kwargs,
     ):
@@ -49,7 +49,7 @@ class SweBenchEnv(AgentInterface):
         evaluator = SweBenchEvaluator(dataset=[data], max_workers=1)
         evaluator.__enter__()
 
-        tools: list[Tool] = [BashTool(evaluator.containers[0])]
+        tools: list[Tool] = [BashTool(evaluator.containers[0])] if len(evaluator.contianers) > 0 else []
         if self.can_finish:
             tools.append(FinishTool())
 
@@ -62,7 +62,7 @@ class SweBenchEnv(AgentInterface):
 
         if len(messages) == 0:
             prompt = agent_instruction_message(
-                prompt=state.evaluator.problem_statements[0],
+                prompt=state.evaluator.problem_statements[0] if len(state.evaluator.problem_statements) > 0 else "There was an error initializing the github issue.",
                 tools=state.tools,
                 can_finish=self.can_finish,
             )
@@ -112,6 +112,9 @@ class SweBenchEnv(AgentInterface):
         return state.finished
 
     def get_reward(self, messages: list[Message], state: SweBenchAgentState) -> float:
+        if len(state.evaluator.containers) == 0:
+            return 0.0
+
         reward = swe_bench_solution_evaluation_score(
             container=state.evaluator.containers[0],
             datapoint=state.evaluator.dataset[0],
