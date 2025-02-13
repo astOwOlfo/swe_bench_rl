@@ -41,7 +41,6 @@ class SweBenchEnv(AgentInterface):
         can_finish: bool = True,
         **kwargs,
     ):
-        assert False
         super().__init__(*args, **kwargs)
         self.max_steps = max_steps
         self.can_finish = can_finish
@@ -58,7 +57,7 @@ class SweBenchEnv(AgentInterface):
 
     def get_next_prompt(
         self, messages: list[Message], state: SweBenchAgentState
-    ) -> tuple[Message, SweBenchAgentState] | None:
+    ) -> tuple[Message | None, SweBenchAgentState]:
         assert not state.finished
 
         if len(messages) == 0:
@@ -99,7 +98,7 @@ class SweBenchEnv(AgentInterface):
             messages.append(
                 {
                     "role": "tool",
-                    "tool_call_id": tool_call_result.tool_name,
+                    # "tool_call_id": tool_call_result.tool_name,
                     "content": tool_call_result.tool_response,
                 }
             )
@@ -144,3 +143,83 @@ def main() -> None:
     messages = []
     messages, state = environment.get_next_prompt(messages, state)
     reward = environment.get_reward(messages, state)
+
+
+def main_2() -> None:
+    from vllm import LLM, SamplingParams
+    import json
+    from .threaded_map import threaded_map, delayed
+    from more_itertools import chunked
+
+    with open("/home/ubuntu/data/swebench_verified_only_containers_which_build.json", "r") as f:
+        whole_dataset = json.load(f)
+
+    llm = LLM(
+        model="Qwen/Qwen2.5-Coder-32B-Instruct",
+        quantization="fp8",
+        enable_prefix_caching=True,
+        tensor_parallel_size=8,
+
+    )
+
+    for dataset in chunked(whole_dataset, 16):
+        env = SweBenchEnv(
+            full_data=dataset,
+            sampling_params=None,
+            vllm_engine=None,
+        )
+
+        states = threaded_map((delayed(env.init_state)(datapoint) for datapoint in dataset), max_workers=32)
+        unfinished_states = states.copy()
+        conversations = [[] for _ in dataset]
+        unfinished_conversations = conversations.copy()
+        for step in range(8):
+            next_messages_and_states = threaded_map(
+                (
+                    delayed(env.get_next_prompt)(conversation, state)
+                    for conversation, state in zip(unfinished_conversations, unfinished_states, strict=True)
+                ),
+                max_workers=32
+            )
+            finished_indices = []
+            for i, (message, state) in enumerate(next_messages_and_states):
+                if message is None:
+                    finished_indices.append(i)
+                    continue
+                unfinished_conversations[i].append(message)
+                unfinished_states[i] = state
+
+            new_messages = llm.chat(
+                unfinished_conversations,
+                sampling_params=SamplingParams(temperature=0.6, max_tokens=4096)
+            )
+            for output, conversation in zip(new_messages, unfinished_conversations, strict=True):
+                conversation.append({"role": "assistant", "content": output.outputs[0].text})
+
+            unfinished_states = [state for i, state in enumerate(unfinished_states) if i not in finished_indices]
+            unfinished_conversations = [conversation for i, conversation in enumerate(unfinished_conversations) if i not in finished_indices]
+
+        rewards = threaded_map(
+            (
+                delayed(env.get_reward)(conversation, state)
+                for conversation, state in zip(conversations, states, strict=True)
+            ),
+            max_workers=32
+        )
+
+        print("+" * 100)
+        print("+" * 100)
+        print("+" * 100)
+        print("FINISHED EXECUTING AGENT LOOPS")
+        for i, (conversation, reward) in enumerate(zip(conversations, rewards, strict=True)):
+            print("+" * 100)
+            print("+" * 100)
+            print("+" * 100)
+            print(f"AGENT LOOP {i + 1} ------- REWARD: {reward}")
+            for message in conversation:
+                print("=" * 100)
+                for field, value in message.items():
+                    if field == "content":
+                        continue
+                    print(field.upper(), value)
+                print("CONTENT:", message["content"])

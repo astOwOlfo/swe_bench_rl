@@ -204,6 +204,9 @@ class SweBenchEvaluator(ContextManager):
 
         self.containers = [Container(name=container.name) for container in containers]
 
+        for container, datapoint in zip(self.containers, self.dataset, strict=True):
+            setup_swe_bench_python_environment(container, datapoint)
+
     def _stop_containers(self) -> None:
         threaded_map(
             (delayed(container.stop)() for container in self.containers),
@@ -243,6 +246,76 @@ class SweBenchEvaluator(ContextManager):
         self.dataset = [
             instance_id_to_datapoint[instance_id] for instance_id in instance_ids
         ]
+
+
+@beartype
+def setup_swe_bench_python_environment(container: Container, datapoint: dict) -> None:
+    setup_script = get_swe_bench_python_environment_setup_script(
+        test_patch=datapoint["test_patch"],
+        repo=datapoint["repo"],
+        version=datapoint["version"],
+        base_commit=datapoint["base_commit"],
+    )
+
+    upload_file(container, filename="setup_script", content=setup_script)
+
+    container.exec_run("chmod +x ./setup_script")
+    setup_script_output = container.exec_run("./setup_script").output
+    container.exec_run("rm ./setup_script")
+
+    print("SETUP SCRIPT OUTPUT:", setup_script_output)
+
+
+@beartype
+def get_swe_bench_python_environment_setup_script(test_patch: str, repo: str, version: str, base_commit: str) -> str:
+    from swebench.harness.constants import MAP_REPO_VERSION_TO_SPECS
+    from swebench.harness.utils import get_test_directives
+    from textwrap import dedent
+
+    conda_env = "testbed"
+    repo_directory = "/testbed"
+
+    # Fetch any repo-specific setup commands, e.g. any environment variables
+    repo_specific_setup_command = MAP_REPO_VERSION_TO_SPECS[repo][version].get(
+        "eval_commands", []
+    )
+
+    repo_specific_install_command = MAP_REPO_VERSION_TO_SPECS[repo][version].get(
+        "install", ""
+    )
+
+    if repo == "scikit-learn/scikit-learn":  # Scikit-learn gets upset with the install
+        repo_specific_install_command = ""
+
+    # Reset test files to the state they should be in before the patch.
+    newline = "\n"
+    setup_script = dedent(
+        f"""#!/bin/bash
+        set -uo pipefail -x
+
+        #We switch to the repository directory and activate the environment needed to run the tests
+        cd {repo_directory}
+        set +x
+        source /opt/miniconda3/bin/activate
+        conda activate {conda_env}
+        set -x
+
+        #We run all of the repo-specific setup commands (If any exist)
+        {newline.join(repo_specific_setup_command)}
+
+        #We make sure we're back in the correct cwd and environment, in case repo setup caused issues.
+        cd {repo_directory}
+        set +x
+        source /opt/miniconda3/bin/activate
+        conda activate {conda_env}
+        set -x
+
+        #We then re-run any repo-specific install commands (these should have happened in environment setup, but we do it again to be sure.)
+        {repo_specific_install_command}
+    """
+    )
+
+    return setup_script
 
 
 @beartype

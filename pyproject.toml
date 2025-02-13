@@ -33,5 +33,5 @@ requires = ["setuptools", "wheel", "torch>=2.5.1"]
 packages = []
 
 [tool.uv.sources]
-openrlhf = { git = "https://github.com/JYudelson1/OpenRLHF-reward-hacking" }
+openrlhf = { git = "https://github.com/JYudelson1/OpenRLHF-reward-hacking", branch = "no-parallel" }
 inspect_evals = { git = "https://github.com/UKGovernmentBEIS/inspect_evals" }

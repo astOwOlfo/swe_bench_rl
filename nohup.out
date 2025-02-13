@@ -1,0 +1,1271 @@
+INFO 02-13 18:41:41 __init__.py:183] Automatically detected platform cuda.
+/home/ubuntu/swe_bench_rl/.venv/lib/python3.10/site-packages/swebench/harness/run_evaluation_modal.py:217: PendingDeprecationError: 2024-01-08: modal.Mount usage will soon be deprecated.
+
+Use image.add_local_file instead, which is functionally and performance-wise equivalent.
+
+  modal.Mount.from_local_file(
+/home/ubuntu/swe_bench_rl/.venv/lib/python3.10/site-packages/swebench/harness/run_evaluation_modal.py:224: DeprecationError: 2025-02-03: Modal will stop implicitly adding local Python modules to the Image ("automounting") in a future update. The following modules need to be explicitly added for future compatibility:
+* _remote_module_non_scriptable
+* swebench_env
+
+e.g.:
+image_with_source = my_image.add_local_python_source("_remote_module_non_scriptable", "swebench_env")
+
+For more information, see https://modal.com/docs/guide/modal-1-0-migration
+  def run_instance_modal(
+INFO 02-13 18:41:52 config.py:520] This model supports multiple tasks: {'generate', 'classify', 'reward', 'embed', 'score'}. Defaulting to 'generate'.
+INFO 02-13 18:41:52 config.py:1328] Defaulting to use mp for distributed inference
+INFO 02-13 18:41:54 llm_engine.py:232] Initializing an LLM engine (v0.7.0) with config: model='Qwen/Qwen2.5-Coder-32B-Instruct', speculative_config=None, tokenizer='Qwen/Qwen2.5-Coder-32B-Instruct', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=32768, download_dir=None, load_format=auto, tensor_parallel_size=8, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=fp8, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(guided_decoding_backend='xgrammar'), observability_config=ObservabilityConfig(otlp_traces_endpoint=None, collect_model_forward_time=False, collect_model_execute_time=False), seed=0, served_model_name=Qwen/Qwen2.5-Coder-32B-Instruct, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=True, chunked_prefill_enabled=False, use_async_output_proc=True, disable_mm_preprocessor_cache=False, mm_processor_kwargs=None, pooler_config=None, compilation_config={"splitting_ops":[],"compile_sizes":[],"cudagraph_capture_sizes":[256,248,240,232,224,216,208,200,192,184,176,168,160,152,144,136,128,120,112,104,96,88,80,72,64,56,48,40,32,24,16,8,4,2,1],"max_capture_size":256}, use_cached_outputs=False, 
+WARNING 02-13 18:41:55 multiproc_worker_utils.py:298] Reducing Torch parallelism from 124 threads to 1 to avoid unnecessary CPU contention. Set OMP_NUM_THREADS in the external environment to tune this value as needed.
+INFO 02-13 18:41:55 custom_cache_manager.py:17] Setting Triton cache manager to: vllm.triton_utils.custom_cache_manager:CustomCacheManager
+[1;36m(VllmWorkerProcess pid=1631338)[0;0m INFO 02-13 18:41:55 multiproc_worker_utils.py:227] Worker ready; awaiting tasks
+[1;36m(VllmWorkerProcess pid=1631339)[0;0m INFO 02-13 18:41:55 multiproc_worker_utils.py:227] Worker ready; awaiting tasks
+[1;36m(VllmWorkerProcess pid=1631340)[0;0m INFO 02-13 18:41:55 multiproc_worker_utils.py:227] Worker ready; awaiting tasks
+[1;36m(VllmWorkerProcess pid=1631341)[0;0m INFO 02-13 18:41:55 multiproc_worker_utils.py:227] Worker ready; awaiting tasks
+[1;36m(VllmWorkerProcess pid=1631342)[0;0m INFO 02-13 18:41:55 multiproc_worker_utils.py:227] Worker ready; awaiting tasks
+[1;36m(VllmWorkerProcess pid=1631343)[0;0m INFO 02-13 18:41:55 multiproc_worker_utils.py:227] Worker ready; awaiting tasks
+[1;36m(VllmWorkerProcess pid=1631344)[0;0m INFO 02-13 18:41:55 multiproc_worker_utils.py:227] Worker ready; awaiting tasks
+INFO 02-13 18:41:55 cuda.py:225] Using Flash Attention backend.
+[1;36m(VllmWorkerProcess pid=1631338)[0;0m INFO 02-13 18:41:55 cuda.py:225] Using Flash Attention backend.
+[1;36m(VllmWorkerProcess pid=1631343)[0;0m INFO 02-13 18:41:55 cuda.py:225] Using Flash Attention backend.
+[1;36m(VllmWorkerProcess pid=1631339)[0;0m INFO 02-13 18:41:55 cuda.py:225] Using Flash Attention backend.
+[1;36m(VllmWorkerProcess pid=1631340)[0;0m INFO 02-13 18:41:55 cuda.py:225] Using Flash Attention backend.
+[1;36m(VllmWorkerProcess pid=1631341)[0;0m INFO 02-13 18:41:55 cuda.py:225] Using Flash Attention backend.
+[1;36m(VllmWorkerProcess pid=1631344)[0;0m INFO 02-13 18:41:55 cuda.py:225] Using Flash Attention backend.
+[1;36m(VllmWorkerProcess pid=1631342)[0;0m INFO 02-13 18:41:55 cuda.py:225] Using Flash Attention backend.
+[rank3]:[W213 18:42:17.130707520 ProcessGroupGloo.cpp:715] Warning: Unable to resolve hostname to a (local) address. Using the loopback address as fallback. Manually set the network interface to bind to with GLOO_SOCKET_IFNAME. (function operator())
+[rank7]:[W213 18:42:19.190559939 ProcessGroupGloo.cpp:715] Warning: Unable to resolve hostname to a (local) address. Using the loopback address as fallback. Manually set the network interface to bind to with GLOO_SOCKET_IFNAME. (function operator())
+[rank5]:[W213 18:42:20.861095806 ProcessGroupGloo.cpp:715] Warning: Unable to resolve hostname to a (local) address. Using the loopback address as fallback. Manually set the network interface to bind to with GLOO_SOCKET_IFNAME. (function operator())
+[rank6]:[W213 18:42:22.896082219 ProcessGroupGloo.cpp:715] Warning: Unable to resolve hostname to a (local) address. Using the loopback address as fallback. Manually set the network interface to bind to with GLOO_SOCKET_IFNAME. (function operator())
+[rank0]:[W213 18:42:24.281687228 ProcessGroupGloo.cpp:715] Warning: Unable to resolve hostname to a (local) address. Using the loopback address as fallback. Manually set the network interface to bind to with GLOO_SOCKET_IFNAME. (function operator())
+[rank4]:[W213 18:42:25.636509253 ProcessGroupGloo.cpp:715] Warning: Unable to resolve hostname to a (local) address. Using the loopback address as fallback. Manually set the network interface to bind to with GLOO_SOCKET_IFNAME. (function operator())
+[rank2]:[W213 18:42:26.331506862 ProcessGroupGloo.cpp:715] Warning: Unable to resolve hostname to a (local) address. Using the loopback address as fallback. Manually set the network interface to bind to with GLOO_SOCKET_IFNAME. (function operator())
+[rank1]:[W213 18:42:28.357094442 ProcessGroupGloo.cpp:715] Warning: Unable to resolve hostname to a (local) address. Using the loopback address as fallback. Manually set the network interface to bind to with GLOO_SOCKET_IFNAME. (function operator())
+[1;36m(VllmWorkerProcess pid=1631341)[0;0m INFO 02-13 18:43:34 utils.py:938] Found nccl from library libnccl.so.2
+[1;36m(VllmWorkerProcess pid=1631341)[0;0m INFO 02-13 18:43:34 pynccl.py:67] vLLM is using nccl==2.21.5
+[1;36m(VllmWorkerProcess pid=1631340)[0;0m INFO 02-13 18:43:34 utils.py:938] Found nccl from library libnccl.so.2
+INFO 02-13 18:43:34 utils.py:938] Found nccl from library libnccl.so.2
+[1;36m(VllmWorkerProcess pid=1631343)[0;0m INFO 02-13 18:43:34 utils.py:938] Found nccl from library libnccl.so.2
+[1;36m(VllmWorkerProcess pid=1631340)[0;0m INFO 02-13 18:43:34 pynccl.py:67] vLLM is using nccl==2.21.5
+[1;36m(VllmWorkerProcess pid=1631338)[0;0m INFO 02-13 18:43:34 utils.py:938] Found nccl from library libnccl.so.2
+INFO 02-13 18:43:34 pynccl.py:67] vLLM is using nccl==2.21.5
+[1;36m(VllmWorkerProcess pid=1631343)[0;0m INFO 02-13 18:43:34 pynccl.py:67] vLLM is using nccl==2.21.5
+[1;36m(VllmWorkerProcess pid=1631338)[0;0m INFO 02-13 18:43:34 pynccl.py:67] vLLM is using nccl==2.21.5
+[1;36m(VllmWorkerProcess pid=1631342)[0;0m INFO 02-13 18:43:34 utils.py:938] Found nccl from library libnccl.so.2
+[1;36m(VllmWorkerProcess pid=1631339)[0;0m INFO 02-13 18:43:34 utils.py:938] Found nccl from library libnccl.so.2
+[1;36m(VllmWorkerProcess pid=1631339)[0;0m INFO 02-13 18:43:34 pynccl.py:67] vLLM is using nccl==2.21.5
+[1;36m(VllmWorkerProcess pid=1631342)[0;0m INFO 02-13 18:43:34 pynccl.py:67] vLLM is using nccl==2.21.5
+[1;36m(VllmWorkerProcess pid=1631344)[0;0m INFO 02-13 18:43:34 utils.py:938] Found nccl from library libnccl.so.2
+[1;36m(VllmWorkerProcess pid=1631344)[0;0m INFO 02-13 18:43:34 pynccl.py:67] vLLM is using nccl==2.21.5
+[1;36m(VllmWorkerProcess pid=1631339)[0;0m INFO 02-13 18:43:40 custom_all_reduce_utils.py:242] reading GPU P2P access cache from /home/ubuntu/.cache/vllm/gpu_p2p_access_cache_for_0,1,2,3,4,5,6,7.json
+[1;36m(VllmWorkerProcess pid=1631341)[0;0m INFO 02-13 18:43:40 custom_all_reduce_utils.py:242] reading GPU P2P access cache from /home/ubuntu/.cache/vllm/gpu_p2p_access_cache_for_0,1,2,3,4,5,6,7.json
+[1;36m(VllmWorkerProcess pid=1631344)[0;0m INFO 02-13 18:43:40 custom_all_reduce_utils.py:242] reading GPU P2P access cache from /home/ubuntu/.cache/vllm/gpu_p2p_access_cache_for_0,1,2,3,4,5,6,7.json
+[1;36m(VllmWorkerProcess pid=1631338)[0;0m INFO 02-13 18:43:40 custom_all_reduce_utils.py:242] reading GPU P2P access cache from /home/ubuntu/.cache/vllm/gpu_p2p_access_cache_for_0,1,2,3,4,5,6,7.json
+[1;36m(VllmWorkerProcess pid=1631343)[0;0m INFO 02-13 18:43:40 custom_all_reduce_utils.py:242] reading GPU P2P access cache from /home/ubuntu/.cache/vllm/gpu_p2p_access_cache_for_0,1,2,3,4,5,6,7.json
+[1;36m(VllmWorkerProcess pid=1631342)[0;0m INFO 02-13 18:43:40 custom_all_reduce_utils.py:242] reading GPU P2P access cache from /home/ubuntu/.cache/vllm/gpu_p2p_access_cache_for_0,1,2,3,4,5,6,7.json
+INFO 02-13 18:43:40 custom_all_reduce_utils.py:242] reading GPU P2P access cache from /home/ubuntu/.cache/vllm/gpu_p2p_access_cache_for_0,1,2,3,4,5,6,7.json
+[1;36m(VllmWorkerProcess pid=1631340)[0;0m INFO 02-13 18:43:40 custom_all_reduce_utils.py:242] reading GPU P2P access cache from /home/ubuntu/.cache/vllm/gpu_p2p_access_cache_for_0,1,2,3,4,5,6,7.json
+INFO 02-13 18:43:40 shm_broadcast.py:256] vLLM message queue communication handle: Handle(connect_ip='127.0.0.1', local_reader_ranks=[1, 2, 3, 4, 5, 6, 7], buffer_handle=(7, 4194304, 6, 'psm_f5d2c168'), local_subscribe_port=51349, remote_subscribe_port=None)
+INFO 02-13 18:45:11 model_runner.py:1110] Starting to load model Qwen/Qwen2.5-Coder-32B-Instruct...
+[1;36m(VllmWorkerProcess pid=1631339)[0;0m INFO 02-13 18:45:11 model_runner.py:1110] Starting to load model Qwen/Qwen2.5-Coder-32B-Instruct...
+[1;36m(VllmWorkerProcess pid=1631344)[0;0m INFO 02-13 18:45:11 model_runner.py:1110] Starting to load model Qwen/Qwen2.5-Coder-32B-Instruct...
+[1;36m(VllmWorkerProcess pid=1631340)[0;0m INFO 02-13 18:45:11 model_runner.py:1110] Starting to load model Qwen/Qwen2.5-Coder-32B-Instruct...
+[1;36m(VllmWorkerProcess pid=1631343)[0;0m INFO 02-13 18:45:11 model_runner.py:1110] Starting to load model Qwen/Qwen2.5-Coder-32B-Instruct...
+[1;36m(VllmWorkerProcess pid=1631341)[0;0m INFO 02-13 18:45:11 model_runner.py:1110] Starting to load model Qwen/Qwen2.5-Coder-32B-Instruct...
+[1;36m(VllmWorkerProcess pid=1631342)[0;0m INFO 02-13 18:45:11 model_runner.py:1110] Starting to load model Qwen/Qwen2.5-Coder-32B-Instruct...
+[1;36m(VllmWorkerProcess pid=1631338)[0;0m INFO 02-13 18:45:11 model_runner.py:1110] Starting to load model Qwen/Qwen2.5-Coder-32B-Instruct...
+INFO 02-13 18:45:12 weight_utils.py:251] Using model weights format ['*.safetensors']
+[1;36m(VllmWorkerProcess pid=1631343)[0;0m INFO 02-13 18:45:12 weight_utils.py:251] Using model weights format ['*.safetensors']
+[1;36m(VllmWorkerProcess pid=1631340)[0;0m INFO 02-13 18:45:12 weight_utils.py:251] Using model weights format ['*.safetensors']
+[1;36m(VllmWorkerProcess pid=1631344)[0;0m INFO 02-13 18:45:12 weight_utils.py:251] Using model weights format ['*.safetensors']
+[1;36m(VllmWorkerProcess pid=1631338)[0;0m INFO 02-13 18:45:12 weight_utils.py:251] Using model weights format ['*.safetensors']
+
+Loading safetensors checkpoint shards:   0% Completed | 0/14 [00:00<?, ?it/s]
+[1;36m(VllmWorkerProcess pid=1631341)[0;0m INFO 02-13 18:45:12 weight_utils.py:251] Using model weights format ['*.safetensors']
+[1;36m(VllmWorkerProcess pid=1631339)[0;0m INFO 02-13 18:45:13 weight_utils.py:251] Using model weights format ['*.safetensors']
+[1;36m(VllmWorkerProcess pid=1631342)[0;0m INFO 02-13 18:45:13 weight_utils.py:251] Using model weights format ['*.safetensors']
+
+Loading safetensors checkpoint shards:  14% Completed | 2/14 [00:00<00:02,  4.16it/s]
+
+Loading safetensors checkpoint shards:  21% Completed | 3/14 [00:00<00:03,  2.99it/s]
+
+Loading safetensors checkpoint shards:  29% Completed | 4/14 [00:01<00:03,  2.61it/s]
+
+Loading safetensors checkpoint shards:  36% Completed | 5/14 [00:01<00:03,  2.61it/s]
+
+Loading safetensors checkpoint shards:  43% Completed | 6/14 [00:02<00:03,  2.48it/s]
+
+Loading safetensors checkpoint shards:  50% Completed | 7/14 [00:02<00:02,  2.37it/s]
+
+Loading safetensors checkpoint shards:  57% Completed | 8/14 [00:03<00:02,  2.28it/s]
+
+Loading safetensors checkpoint shards:  64% Completed | 9/14 [00:03<00:02,  2.22it/s]
+
+Loading safetensors checkpoint shards:  71% Completed | 10/14 [00:04<00:01,  2.18it/s]
+
+Loading safetensors checkpoint shards:  79% Completed | 11/14 [00:04<00:01,  2.17it/s]
+
+Loading safetensors checkpoint shards:  86% Completed | 12/14 [00:05<00:00,  2.16it/s]
+
+Loading safetensors checkpoint shards:  93% Completed | 13/14 [00:05<00:00,  2.16it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 14/14 [00:05<00:00,  2.16it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 14/14 [00:05<00:00,  2.34it/s]
+
+WARNING 02-13 18:45:18 marlin_utils_fp8.py:52] Your GPU does not have native support for FP8 computation but FP8 quantization is being used. Weight-only FP8 compression will be used leveraging the Marlin kernel. This may degrade performance for compute-heavy workloads.
+[1;36m(VllmWorkerProcess pid=1631343)[0;0m WARNING 02-13 18:45:19 marlin_utils_fp8.py:52] Your GPU does not have native support for FP8 computation but FP8 quantization is being used. Weight-only FP8 compression will be used leveraging the Marlin kernel. This may degrade performance for compute-heavy workloads.
+INFO 02-13 18:45:19 model_runner.py:1115] Loading model weights took 4.0466 GB
+[1;36m(VllmWorkerProcess pid=1631340)[0;0m WARNING 02-13 18:45:19 marlin_utils_fp8.py:52] Your GPU does not have native support for FP8 computation but FP8 quantization is being used. Weight-only FP8 compression will be used leveraging the Marlin kernel. This may degrade performance for compute-heavy workloads.
+[1;36m(VllmWorkerProcess pid=1631343)[0;0m INFO 02-13 18:45:19 model_runner.py:1115] Loading model weights took 4.0466 GB
+[1;36m(VllmWorkerProcess pid=1631344)[0;0m WARNING 02-13 18:45:20 marlin_utils_fp8.py:52] Your GPU does not have native support for FP8 computation but FP8 quantization is being used. Weight-only FP8 compression will be used leveraging the Marlin kernel. This may degrade performance for compute-heavy workloads.
+[1;36m(VllmWorkerProcess pid=1631340)[0;0m INFO 02-13 18:45:20 model_runner.py:1115] Loading model weights took 4.0466 GB
+[1;36m(VllmWorkerProcess pid=1631344)[0;0m INFO 02-13 18:45:20 model_runner.py:1115] Loading model weights took 4.0466 GB
+[1;36m(VllmWorkerProcess pid=1631339)[0;0m WARNING 02-13 18:45:20 marlin_utils_fp8.py:52] Your GPU does not have native support for FP8 computation but FP8 quantization is being used. Weight-only FP8 compression will be used leveraging the Marlin kernel. This may degrade performance for compute-heavy workloads.
+[1;36m(VllmWorkerProcess pid=1631338)[0;0m WARNING 02-13 18:45:21 marlin_utils_fp8.py:52] Your GPU does not have native support for FP8 computation but FP8 quantization is being used. Weight-only FP8 compression will be used leveraging the Marlin kernel. This may degrade performance for compute-heavy workloads.
+[1;36m(VllmWorkerProcess pid=1631339)[0;0m INFO 02-13 18:45:21 model_runner.py:1115] Loading model weights took 4.0466 GB
+[1;36m(VllmWorkerProcess pid=1631338)[0;0m INFO 02-13 18:45:21 model_runner.py:1115] Loading model weights took 4.0466 GB
+[1;36m(VllmWorkerProcess pid=1631342)[0;0m WARNING 02-13 18:45:22 marlin_utils_fp8.py:52] Your GPU does not have native support for FP8 computation but FP8 quantization is being used. Weight-only FP8 compression will be used leveraging the Marlin kernel. This may degrade performance for compute-heavy workloads.
+[1;36m(VllmWorkerProcess pid=1631341)[0;0m WARNING 02-13 18:45:22 marlin_utils_fp8.py:52] Your GPU does not have native support for FP8 computation but FP8 quantization is being used. Weight-only FP8 compression will be used leveraging the Marlin kernel. This may degrade performance for compute-heavy workloads.
+[1;36m(VllmWorkerProcess pid=1631342)[0;0m INFO 02-13 18:45:22 model_runner.py:1115] Loading model weights took 4.0466 GB
+[1;36m(VllmWorkerProcess pid=1631341)[0;0m INFO 02-13 18:45:23 model_runner.py:1115] Loading model weights took 4.0466 GB
+[1;36m(VllmWorkerProcess pid=1631338)[0;0m INFO 02-13 18:45:30 worker.py:266] Memory profiling takes 6.58 seconds
+[1;36m(VllmWorkerProcess pid=1631338)[0;0m INFO 02-13 18:45:30 worker.py:266] the current vLLM instance can use total_gpu_memory (39.38GiB) x gpu_memory_utilization (0.90) = 35.44GiB
+[1;36m(VllmWorkerProcess pid=1631338)[0;0m INFO 02-13 18:45:30 worker.py:266] model weights take 4.05GiB; non_torch_memory takes 2.10GiB; PyTorch activation peak memory takes 2.20GiB; the rest of the memory reserved for KV Cache is 27.10GiB.
+[1;36m(VllmWorkerProcess pid=1631341)[0;0m INFO 02-13 18:45:30 worker.py:266] Memory profiling takes 6.71 seconds
+[1;36m(VllmWorkerProcess pid=1631341)[0;0m INFO 02-13 18:45:30 worker.py:266] the current vLLM instance can use total_gpu_memory (39.38GiB) x gpu_memory_utilization (0.90) = 35.44GiB
+[1;36m(VllmWorkerProcess pid=1631341)[0;0m INFO 02-13 18:45:30 worker.py:266] model weights take 4.05GiB; non_torch_memory takes 2.10GiB; PyTorch activation peak memory takes 2.20GiB; the rest of the memory reserved for KV Cache is 27.10GiB.
+[1;36m(VllmWorkerProcess pid=1631339)[0;0m INFO 02-13 18:45:30 worker.py:266] Memory profiling takes 6.72 seconds
+[1;36m(VllmWorkerProcess pid=1631339)[0;0m INFO 02-13 18:45:30 worker.py:266] the current vLLM instance can use total_gpu_memory (39.38GiB) x gpu_memory_utilization (0.90) = 35.44GiB
+[1;36m(VllmWorkerProcess pid=1631339)[0;0m INFO 02-13 18:45:30 worker.py:266] model weights take 4.05GiB; non_torch_memory takes 2.10GiB; PyTorch activation peak memory takes 2.20GiB; the rest of the memory reserved for KV Cache is 27.10GiB.
+[1;36m(VllmWorkerProcess pid=1631343)[0;0m INFO 02-13 18:45:30 worker.py:266] Memory profiling takes 6.74 seconds
+[1;36m(VllmWorkerProcess pid=1631343)[0;0m INFO 02-13 18:45:30 worker.py:266] the current vLLM instance can use total_gpu_memory (39.38GiB) x gpu_memory_utilization (0.90) = 35.44GiB
+[1;36m(VllmWorkerProcess pid=1631343)[0;0m INFO 02-13 18:45:30 worker.py:266] model weights take 4.05GiB; non_torch_memory takes 2.10GiB; PyTorch activation peak memory takes 2.20GiB; the rest of the memory reserved for KV Cache is 27.10GiB.
+[1;36m(VllmWorkerProcess pid=1631342)[0;0m INFO 02-13 18:45:30 worker.py:266] Memory profiling takes 6.70 seconds
+[1;36m(VllmWorkerProcess pid=1631342)[0;0m INFO 02-13 18:45:30 worker.py:266] the current vLLM instance can use total_gpu_memory (39.38GiB) x gpu_memory_utilization (0.90) = 35.44GiB
+[1;36m(VllmWorkerProcess pid=1631342)[0;0m INFO 02-13 18:45:30 worker.py:266] model weights take 4.05GiB; non_torch_memory takes 2.10GiB; PyTorch activation peak memory takes 2.20GiB; the rest of the memory reserved for KV Cache is 27.10GiB.
+[1;36m(VllmWorkerProcess pid=1631340)[0;0m INFO 02-13 18:45:30 worker.py:266] Memory profiling takes 6.58 seconds
+[1;36m(VllmWorkerProcess pid=1631340)[0;0m INFO 02-13 18:45:30 worker.py:266] the current vLLM instance can use total_gpu_memory (39.38GiB) x gpu_memory_utilization (0.90) = 35.44GiB
+[1;36m(VllmWorkerProcess pid=1631340)[0;0m INFO 02-13 18:45:30 worker.py:266] model weights take 4.05GiB; non_torch_memory takes 2.10GiB; PyTorch activation peak memory takes 2.20GiB; the rest of the memory reserved for KV Cache is 27.10GiB.
+INFO 02-13 18:45:30 worker.py:266] Memory profiling takes 6.90 seconds
+INFO 02-13 18:45:30 worker.py:266] the current vLLM instance can use total_gpu_memory (39.38GiB) x gpu_memory_utilization (0.90) = 35.44GiB
+INFO 02-13 18:45:30 worker.py:266] model weights take 4.05GiB; non_torch_memory takes 2.95GiB; PyTorch activation peak memory takes 2.20GiB; the rest of the memory reserved for KV Cache is 26.25GiB.
+[1;36m(VllmWorkerProcess pid=1631344)[0;0m INFO 02-13 18:45:30 worker.py:266] Memory profiling takes 6.92 seconds
+[1;36m(VllmWorkerProcess pid=1631344)[0;0m INFO 02-13 18:45:30 worker.py:266] the current vLLM instance can use total_gpu_memory (39.38GiB) x gpu_memory_utilization (0.90) = 35.44GiB
+[1;36m(VllmWorkerProcess pid=1631344)[0;0m INFO 02-13 18:45:30 worker.py:266] model weights take 4.05GiB; non_torch_memory takes 1.82GiB; PyTorch activation peak memory takes 2.20GiB; the rest of the memory reserved for KV Cache is 27.38GiB.
+INFO 02-13 18:45:30 executor_base.py:108] # CUDA blocks: 53762, # CPU blocks: 8192
+INFO 02-13 18:45:30 executor_base.py:113] Maximum concurrency for 32768 tokens per request: 26.25x
+INFO 02-13 18:45:35 model_runner.py:1430] Capturing cudagraphs for decoding. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI. If out-of-memory error occurs during cudagraph capture, consider decreasing `gpu_memory_utilization` or switching to eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+
+Capturing CUDA graph shapes:   0%|          | 0/35 [00:00<?, ?it/s][1;36m(VllmWorkerProcess pid=1631339)[0;0m INFO 02-13 18:45:35 model_runner.py:1430] Capturing cudagraphs for decoding. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI. If out-of-memory error occurs during cudagraph capture, consider decreasing `gpu_memory_utilization` or switching to eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1;36m(VllmWorkerProcess pid=1631340)[0;0m INFO 02-13 18:45:35 model_runner.py:1430] Capturing cudagraphs for decoding. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI. If out-of-memory error occurs during cudagraph capture, consider decreasing `gpu_memory_utilization` or switching to eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1;36m(VllmWorkerProcess pid=1631341)[0;0m INFO 02-13 18:45:35 model_runner.py:1430] Capturing cudagraphs for decoding. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI. If out-of-memory error occurs during cudagraph capture, consider decreasing `gpu_memory_utilization` or switching to eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1;36m(VllmWorkerProcess pid=1631342)[0;0m INFO 02-13 18:45:35 model_runner.py:1430] Capturing cudagraphs for decoding. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI. If out-of-memory error occurs during cudagraph capture, consider decreasing `gpu_memory_utilization` or switching to eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1;36m(VllmWorkerProcess pid=1631343)[0;0m INFO 02-13 18:45:35 model_runner.py:1430] Capturing cudagraphs for decoding. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI. If out-of-memory error occurs during cudagraph capture, consider decreasing `gpu_memory_utilization` or switching to eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1;36m(VllmWorkerProcess pid=1631338)[0;0m INFO 02-13 18:45:35 model_runner.py:1430] Capturing cudagraphs for decoding. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI. If out-of-memory error occurs during cudagraph capture, consider decreasing `gpu_memory_utilization` or switching to eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1;36m(VllmWorkerProcess pid=1631344)[0;0m INFO 02-13 18:45:35 model_runner.py:1430] Capturing cudagraphs for decoding. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI. If out-of-memory error occurs during cudagraph capture, consider decreasing `gpu_memory_utilization` or switching to eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+
+Capturing CUDA graph shapes:   3%|▎         | 1/35 [00:00<00:20,  1.65it/s]
+Capturing CUDA graph shapes:   6%|▌         | 2/35 [00:01<00:20,  1.64it/s]
+Capturing CUDA graph shapes:   9%|▊         | 3/35 [00:01<00:19,  1.66it/s]
+Capturing CUDA graph shapes:  11%|█▏        | 4/35 [00:02<00:18,  1.69it/s]
+Capturing CUDA graph shapes:  14%|█▍        | 5/35 [00:02<00:17,  1.71it/s]
+Capturing CUDA graph shapes:  17%|█▋        | 6/35 [00:03<00:16,  1.72it/s]
+Capturing CUDA graph shapes:  20%|██        | 7/35 [00:04<00:16,  1.71it/s]
+Capturing CUDA graph shapes:  23%|██▎       | 8/35 [00:04<00:15,  1.70it/s]
+Capturing CUDA graph shapes:  26%|██▌       | 9/35 [00:05<00:15,  1.70it/s]
+Capturing CUDA graph shapes:  29%|██▊       | 10/35 [00:05<00:14,  1.71it/s]
+Capturing CUDA graph shapes:  31%|███▏      | 11/35 [00:06<00:13,  1.72it/s]
+Capturing CUDA graph shapes:  34%|███▍      | 12/35 [00:07<00:13,  1.72it/s]
+Capturing CUDA graph shapes:  37%|███▋      | 13/35 [00:07<00:12,  1.73it/s]
+Capturing CUDA graph shapes:  40%|████      | 14/35 [00:08<00:12,  1.74it/s]
+Capturing CUDA graph shapes:  43%|████▎     | 15/35 [00:08<00:11,  1.73it/s]
+Capturing CUDA graph shapes:  46%|████▌     | 16/35 [00:09<00:11,  1.71it/s]
+Capturing CUDA graph shapes:  49%|████▊     | 17/35 [00:09<00:10,  1.72it/s]
+Capturing CUDA graph shapes:  51%|█████▏    | 18/35 [00:10<00:09,  1.72it/s]
+Capturing CUDA graph shapes:  54%|█████▍    | 19/35 [00:11<00:09,  1.72it/s]
+Capturing CUDA graph shapes:  57%|█████▋    | 20/35 [00:11<00:08,  1.72it/s]
+Capturing CUDA graph shapes:  60%|██████    | 21/35 [00:12<00:08,  1.73it/s]
+Capturing CUDA graph shapes:  63%|██████▎   | 22/35 [00:12<00:07,  1.71it/s]
+Capturing CUDA graph shapes:  66%|██████▌   | 23/35 [00:13<00:07,  1.69it/s]
+Capturing CUDA graph shapes:  69%|██████▊   | 24/35 [00:14<00:06,  1.68it/s]
+Capturing CUDA graph shapes:  71%|███████▏  | 25/35 [00:14<00:05,  1.67it/s]
+Capturing CUDA graph shapes:  74%|███████▍  | 26/35 [00:15<00:05,  1.66it/s]
+Capturing CUDA graph shapes:  77%|███████▋  | 27/35 [00:15<00:04,  1.68it/s]
+Capturing CUDA graph shapes:  80%|████████  | 28/35 [00:16<00:04,  1.70it/s]
+Capturing CUDA graph shapes:  83%|████████▎ | 29/35 [00:17<00:03,  1.70it/s]
+Capturing CUDA graph shapes:  86%|████████▌ | 30/35 [00:17<00:02,  1.70it/s]
+Capturing CUDA graph shapes:  89%|████████▊ | 31/35 [00:18<00:02,  1.71it/s]
+Capturing CUDA graph shapes:  91%|█████████▏| 32/35 [00:18<00:01,  1.70it/s]
+Capturing CUDA graph shapes:  94%|█████████▍| 33/35 [00:19<00:01,  1.71it/s]
+Capturing CUDA graph shapes:  97%|█████████▋| 34/35 [00:19<00:00,  1.73it/s]
+Capturing CUDA graph shapes: 100%|██████████| 35/35 [00:20<00:00,  1.49it/s]
+Capturing CUDA graph shapes: 100%|██████████| 35/35 [00:20<00:00,  1.68it/s]
+INFO 02-13 18:45:55 custom_all_reduce.py:224] Registering 4515 cuda graph addresses
+[1;36m(VllmWorkerProcess pid=1631341)[0;0m INFO 02-13 18:45:55 custom_all_reduce.py:224] Registering 4515 cuda graph addresses
+[1;36m(VllmWorkerProcess pid=1631339)[0;0m INFO 02-13 18:45:56 custom_all_reduce.py:224] Registering 4515 cuda graph addresses
+[1;36m(VllmWorkerProcess pid=1631338)[0;0m INFO 02-13 18:45:56 custom_all_reduce.py:224] Registering 4515 cuda graph addresses
+[1;36m(VllmWorkerProcess pid=1631340)[0;0m INFO 02-13 18:45:56 custom_all_reduce.py:224] Registering 4515 cuda graph addresses
+[1;36m(VllmWorkerProcess pid=1631343)[0;0m INFO 02-13 18:45:57 custom_all_reduce.py:224] Registering 4515 cuda graph addresses
+[1;36m(VllmWorkerProcess pid=1631342)[0;0m INFO 02-13 18:45:57 custom_all_reduce.py:224] Registering 4515 cuda graph addresses
+[1;36m(VllmWorkerProcess pid=1631344)[0;0m INFO 02-13 18:45:58 custom_all_reduce.py:224] Registering 4515 cuda graph addresses
+[1;36m(VllmWorkerProcess pid=1631344)[0;0m INFO 02-13 18:45:58 model_runner.py:1558] Graph capturing finished in 23 secs, took 0.35 GiB
+[1;36m(VllmWorkerProcess pid=1631341)[0;0m INFO 02-13 18:45:58 model_runner.py:1558] Graph capturing finished in 23 secs, took 0.35 GiB
+[1;36m(VllmWorkerProcess pid=1631338)[0;0m INFO 02-13 18:45:58 model_runner.py:1558] Graph capturing finished in 23 secs, took 0.35 GiB
+[1;36m(VllmWorkerProcess pid=1631343)[0;0m INFO 02-13 18:45:58 model_runner.py:1558] Graph capturing finished in 23 secs, took 0.35 GiB
+[1;36m(VllmWorkerProcess pid=1631340)[0;0m INFO 02-13 18:45:58 model_runner.py:1558] Graph capturing finished in 23 secs, took 0.35 GiB
+[1;36m(VllmWorkerProcess pid=1631342)[0;0m INFO 02-13 18:45:58 model_runner.py:1558] Graph capturing finished in 23 secs, took 0.35 GiB
+INFO 02-13 18:45:58 model_runner.py:1558] Graph capturing finished in 23 secs, took 0.35 GiB
+[1;36m(VllmWorkerProcess pid=1631339)[0;0m INFO 02-13 18:45:58 model_runner.py:1558] Graph capturing finished in 23 secs, took 0.35 GiB
+INFO 02-13 18:45:58 llm_engine.py:429] init engine (profile, create kv cache, warmup model) took 35.26 seconds
+
+  0%|          | 0/16 [00:00<?, ?it/s]Base image sweb.base.x86_64:latest already exists, skipping build.
+Base images built successfully.
+Base image sweb.base.x86_64:latest already exists, skipping build.
+Base images built successfully.
+Base image sweb.base.x86_64:latest already exists, skipping build.
+Base images built successfully.
+Base image sweb.base.x86_64:latest already exists, skipping build.
+Base images built successfully.
+No environment images need to be built.
+Building instance images for 1 instances
+
+
+Building instance images:   0%|          | 0/1 [00:00<?, ?it/s][ABase image sweb.base.x86_64:latest already exists, skipping build.
+Base images built successfully.
+Base image sweb.base.x86_64:latest already exists, skipping build.
+Base images built successfully.
+Base image sweb.base.x86_64:latest already exists, skipping build.
+Base images built successfully.
+Base image sweb.base.x86_64:latest already exists, skipping build.
+Base images built successfully.
+Base image sweb.base.x86_64:latest already exists, skipping build.
+Base images built successfully.
+Base image sweb.base.x86_64:latest already exists, skipping build.
+Base images built successfully.
+Base image sweb.base.x86_64:latest already exists, skipping build.
+Base images built successfully.
+Base image sweb.base.x86_64:latest already exists, skipping build.
+Base images built successfully.
+Base image sweb.base.x86_64:latest already exists, skipping build.
+Base images built successfully.
+No environment images need to be built.
+Building instance images for 1 instances
+
+
+
+Building instance images:   0%|          | 0/1 [00:00<?, ?it/s][A[ANo environment images need to be built.
+Building instance images for 1 instances
+No environment images need to be built.
+Building instance images for 1 instances
+No environment images need to be built.
+Building instance images for 1 instances
+Base image sweb.base.x86_64:latest already exists, skipping build.
+Base images built successfully.
+No environment images need to be built.
+Building instance images for 1 instances
+No environment images need to be built.
+Building instance images for 1 instances
+
+
+
+
+Building instance images:   0%|          | 0/1 [00:00<?, ?it/s][A[A[ANo environment images need to be built.
+Building instance images for 1 instances
+No environment images need to be built.
+Building instance images for 1 instances
+No environment images need to be built.
+Building instance images for 1 instances
+No environment images need to be built.
+Building instance images for 1 instances
+No environment images need to be built.
+Building instance images for 1 instances
+No environment images need to be built.
+Building instance images for 1 instances
+No environment images need to be built.
+Building instance images for 1 instances
+
+
+
+
+
+Building instance images:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A
+
+
+
+
+
+
+
+
+Building instance images:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+Building instance images:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+Building instance images:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+Building instance images:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+Building instance images:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+Building instance images:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A
+
+
+
+
+
+
+
+Building instance images:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+Building instance images:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+Building instance images:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Building instance images:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  5.07it/s][A
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  4.84it/s]
+2025-02-13 18:46:00,891 - swebench_env.swebench_evaluator - INFO - Environment image sweb.env.x86_64.428468730904ff6b4232aa:latest found for astropy__astropy-12907---864bc448-ef64-4cde-a63f-a07a0d9a1be2
+Building instance image sweb.eval.x86_64.astropy__astropy-12907---864bc448-ef64-4cde-a63f-a07a0d9a1be2:latest for astropy__astropy-12907---864bc448-ef64-4cde-a63f-a07a0d9a1be2
+Base image sweb.base.x86_64:latest already exists, skipping build.
+Base images built successfully.
+All instance images built successfully.
+1 images built successfully, failed building 0 images
+Base image sweb.base.x86_64:latest already exists, skipping build.
+Base images built successfully.
+
+2025-02-13 18:46:00,898 - swebench_env.swebench_evaluator - INFO - Image sweb.eval.x86_64.astropy__astropy-12907---864bc448-ef64-4cde-a63f-a07a0d9a1be2:latest already exists, skipping build.
+
+building containers:   0%|          | 0/1 [00:00<?, ?it/s][A2025-02-13 18:46:00,901 - swebench_env.swebench_evaluator - INFO - Creating container for astropy__astropy-12907---864bc448-ef64-4cde-a63f-a07a0d9a1be2...
+No environment images need to be built.
+Building instance images for 1 instances
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Building instance images:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A[A[A[A[ANo environment images need to be built.
+Building instance images for 1 instances
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Building instance images:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  2.85it/s][A[A[A
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  2.84it/s]
+All instance images built successfully.
+1 images built successfully, failed building 0 images
+
+
+
+
+building containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A2025-02-13 18:46:01,085 - swebench_env.swebench_evaluator - INFO - Environment image sweb.env.x86_64.428468730904ff6b4232aa:latest found for astropy__astropy-14309---2e2093a7-b04a-433e-9962-cf057abdd692
+Building instance image sweb.eval.x86_64.astropy__astropy-14309---2e2093a7-b04a-433e-9962-cf057abdd692:latest for astropy__astropy-14309---2e2093a7-b04a-433e-9962-cf057abdd692
+2025-02-13 18:46:01,088 - swebench_env.swebench_evaluator - INFO - Image sweb.eval.x86_64.astropy__astropy-14309---2e2093a7-b04a-433e-9962-cf057abdd692:latest already exists, skipping build.
+2025-02-13 18:46:01,088 - swebench_env.swebench_evaluator - INFO - Creating container for astropy__astropy-14309---2e2093a7-b04a-433e-9962-cf057abdd692...
+
+
+
+
+
+
+
+
+
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  2.22it/s][A[A[A[A[A[A[A[A
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  2.22it/s]
+All instance images built successfully.
+1 images built successfully, failed building 0 images
+
+
+
+
+
+
+
+
+
+building containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A2025-02-13 18:46:01,206 - swebench_env.swebench_evaluator - INFO - Environment image sweb.env.x86_64.428468730904ff6b4232aa:latest found for astropy__astropy-14365---aed70f4e-2692-402a-b5e8-fc0d452182d2
+Building instance image sweb.eval.x86_64.astropy__astropy-14365---aed70f4e-2692-402a-b5e8-fc0d452182d2:latest for astropy__astropy-14365---aed70f4e-2692-402a-b5e8-fc0d452182d2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  3.02it/s][A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  3.01it/s]
+All instance images built successfully.
+1 images built successfully, failed building 0 images
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+building containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A[A[A[A[A2025-02-13 18:46:01,260 - swebench_env.swebench_evaluator - INFO - Image sweb.eval.x86_64.astropy__astropy-14365---aed70f4e-2692-402a-b5e8-fc0d452182d2:latest already exists, skipping build.
+2025-02-13 18:46:01,260 - swebench_env.swebench_evaluator - INFO - Creating container for astropy__astropy-14365---aed70f4e-2692-402a-b5e8-fc0d452182d2...
+
+
+
+
+
+
+
+
+
+
+
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.92it/s][A[A[A[A[A[A[A[A[A[A
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.92it/s]
+All instance images built successfully.
+1 images built successfully, failed building 0 images
+
+
+
+
+
+
+
+
+
+
+
+building containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A2025-02-13 18:46:01,290 - swebench_env.swebench_evaluator - INFO - Environment image sweb.env.x86_64.2baaea72acc974f6c02079:latest found for django__django-10554---331fa083-ba3c-4f90-bca5-d9dab28f458e
+Building instance image sweb.eval.x86_64.django__django-10554---331fa083-ba3c-4f90-bca5-d9dab28f458e:latest for django__django-10554---331fa083-ba3c-4f90-bca5-d9dab28f458e
+
+
+
+
+
+
+
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.78it/s][A[A[A[A[A[A
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.78it/s]
+All instance images built successfully.
+1 images built successfully, failed building 0 images
+
+
+
+
+
+
+
+building containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A2025-02-13 18:46:01,316 - swebench_env.swebench_evaluator - INFO - Container for astropy__astropy-12907---864bc448-ef64-4cde-a63f-a07a0d9a1be2 created: c8a4180d1731daa913576371800c3c43ba79e127cadb82afc054881f097a69c2
+
+
+building containers: 100%|██████████| 1/1 [00:00<00:00,  2.40it/s][A
+building containers: 100%|██████████| 1/1 [00:00<00:00,  2.40it/s]2025-02-13 18:46:01,318 - swebench_env.swebench_evaluator - INFO - Container for astropy__astropy-14309---2e2093a7-b04a-433e-9962-cf057abdd692 created: 6c4fca77f91fae52c56de54e1b64155c65c92081a395b372c5aa9baf5438ef71
+
+
+
+
+
+building containers: 100%|██████████| 1/1 [00:00<00:00,  4.22it/s][A[A[A
+building containers: 100%|██████████| 1/1 [00:00<00:00,  4.21it/s]
+2025-02-13 18:46:01,319 - swebench_env.swebench_evaluator - INFO - Environment image sweb.env.x86_64.428468730904ff6b4232aa:latest found for astropy__astropy-14369---9848fbb0-8ce3-49fa-b2a9-d97f0f425f88
+Building instance image sweb.eval.x86_64.astropy__astropy-14369---9848fbb0-8ce3-49fa-b2a9-d97f0f425f88:latest for astropy__astropy-14369---9848fbb0-8ce3-49fa-b2a9-d97f0f425f88
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  2.37it/s][A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s][A
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  2.30it/s]
+All instance images built successfully.
+1 images built successfully, failed building 0 images
+
+
+
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A2025-02-13 18:46:01,345 - swebench_env.swebench_evaluator - INFO - Container for astropy__astropy-14365---aed70f4e-2692-402a-b5e8-fc0d452182d2 created: e1a61d97899cd308125d3a971b0acea8c5123fcd5c69145d3672059b8c28f8ba
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+building containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+building containers: 100%|██████████| 1/1 [00:00<00:00,  6.96it/s][A[A[A[A[A[A[A[A
+building containers: 100%|██████████| 1/1 [00:00<00:00,  6.93it/s]
+2025-02-13 18:46:01,348 - swebench_env.swebench_evaluator - INFO - Environment image sweb.env.x86_64.428468730904ff6b4232aa:latest found for astropy__astropy-14182---2f6f1bbf-e4a2-486a-9f24-f3ac5d6c8ca0
+Building instance image sweb.eval.x86_64.astropy__astropy-14182---2f6f1bbf-e4a2-486a-9f24-f3ac5d6c8ca0:latest for astropy__astropy-14182---2f6f1bbf-e4a2-486a-9f24-f3ac5d6c8ca0
+
+
+
+
+
+
+
+
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A2025-02-13 18:46:01,349 - swebench_env.swebench_evaluator - INFO - Image sweb.eval.x86_64.django__django-10554---331fa083-ba3c-4f90-bca5-d9dab28f458e:latest already exists, skipping build.
+2025-02-13 18:46:01,350 - swebench_env.swebench_evaluator - INFO - Creating container for django__django-10554---331fa083-ba3c-4f90-bca5-d9dab28f458e...
+
+
+
+
+
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.63it/s][A[A[A[A
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.63it/s]
+All instance images built successfully.
+1 images built successfully, failed building 0 images
+
+
+
+
+
+building containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A2025-02-13 18:46:01,371 - swebench_env.swebench_evaluator - INFO - Environment image sweb.env.x86_64.2baaea72acc974f6c02079:latest found for django__django-10880---1f86cfdf-727e-4b24-ad9a-eccdbab199d6
+Building instance image sweb.eval.x86_64.django__django-10880---1f86cfdf-727e-4b24-ad9a-eccdbab199d6:latest for django__django-10880---1f86cfdf-727e-4b24-ad9a-eccdbab199d6
+2025-02-13 18:46:01,373 - swebench_env.swebench_evaluator - INFO - Image sweb.eval.x86_64.astropy__astropy-14369---9848fbb0-8ce3-49fa-b2a9-d97f0f425f88:latest already exists, skipping build.
+2025-02-13 18:46:01,374 - swebench_env.swebench_evaluator - INFO - Creating container for astropy__astropy-14369---9848fbb0-8ce3-49fa-b2a9-d97f0f425f88...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.59it/s][A[A[A[A[A[A[A[A[A[A[A[A[A
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.59it/s]
+All instance images built successfully.
+1 images built successfully, failed building 0 images
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+building containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A[A[A2025-02-13 18:46:01,395 - swebench_env.swebench_evaluator - INFO - Environment image sweb.env.x86_64.428468730904ff6b4232aa:latest found for astropy__astropy-14539---40b6af03-eba0-467a-aa28-a773207a3b89
+Building instance image sweb.eval.x86_64.astropy__astropy-14539---40b6af03-eba0-467a-aa28-a773207a3b89:latest for astropy__astropy-14539---40b6af03-eba0-467a-aa28-a773207a3b89
+2025-02-13 18:46:01,396 - swebench_env.swebench_evaluator - INFO - Image sweb.eval.x86_64.astropy__astropy-14182---2f6f1bbf-e4a2-486a-9f24-f3ac5d6c8ca0:latest already exists, skipping build.
+2025-02-13 18:46:01,397 - swebench_env.swebench_evaluator - INFO - Creating container for astropy__astropy-14182---2f6f1bbf-e4a2-486a-9f24-f3ac5d6c8ca0...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.54it/s][A[A[A[A[A[A[A[A[A[A[A[A[A[A
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.54it/s]
+All instance images built successfully.
+1 images built successfully, failed building 0 images
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+building containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A[A[A[A2025-02-13 18:46:01,421 - swebench_env.swebench_evaluator - INFO - Container for django__django-10554---331fa083-ba3c-4f90-bca5-d9dab28f458e created: ff5e0d9de30f04fc131c104d0e92f31bc9d9f6626c04683fa8b0713d56144fa8
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+building containers: 100%|██████████| 1/1 [00:00<00:00,  5.44it/s][A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+building containers: 100%|██████████| 1/1 [00:00<00:00,  5.41it/s]
+2025-02-13 18:46:01,422 - swebench_env.swebench_evaluator - INFO - Environment image sweb.env.x86_64.428468730904ff6b4232aa:latest found for astropy__astropy-13033---4db6e0e0-42ec-4775-abd8-a119477f240b
+Building instance image sweb.eval.x86_64.astropy__astropy-13033---4db6e0e0-42ec-4775-abd8-a119477f240b:latest for astropy__astropy-13033---4db6e0e0-42ec-4775-abd8-a119477f240b
+2025-02-13 18:46:01,424 - swebench_env.swebench_evaluator - INFO - Image sweb.eval.x86_64.django__django-10880---1f86cfdf-727e-4b24-ad9a-eccdbab199d6:latest already exists, skipping build.
+2025-02-13 18:46:01,424 - swebench_env.swebench_evaluator - INFO - Creating container for django__django-10880---1f86cfdf-727e-4b24-ad9a-eccdbab199d6...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.39it/s][A[A
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.39it/s]
+All instance images built successfully.
+1 images built successfully, failed building 0 images
+
+
+
+building containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A2025-02-13 18:46:01,445 - swebench_env.swebench_evaluator - INFO - Image sweb.eval.x86_64.astropy__astropy-14539---40b6af03-eba0-467a-aa28-a773207a3b89:latest already exists, skipping build.
+2025-02-13 18:46:01,447 - swebench_env.swebench_evaluator - INFO - Creating container for astropy__astropy-14539---40b6af03-eba0-467a-aa28-a773207a3b89...
+2025-02-13 18:46:01,447 - swebench_env.swebench_evaluator - INFO - Environment image sweb.env.x86_64.428468730904ff6b4232aa:latest found for astropy__astropy-14096---60d4ae24-6871-416e-bab8-e07f960e44d9
+Building instance image sweb.eval.x86_64.astropy__astropy-14096---60d4ae24-6871-416e-bab8-e07f960e44d9:latest for astropy__astropy-14096---60d4ae24-6871-416e-bab8-e07f960e44d9
+
+
+
+
+
+
+
+
+
+
+
+
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.42it/s][A[A[A[A[A[A[A[A[A[A[A
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.41it/s]
+2025-02-13 18:46:01,458 - swebench_env.swebench_evaluator - INFO - Container for astropy__astropy-14369---9848fbb0-8ce3-49fa-b2a9-d97f0f425f88 created: 579862a66f63038ed460f570d3c3383a50ac9934e757c060646e769543fc0a48
+All instance images built successfully.
+1 images built successfully, failed building 0 images
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s]
+
+
+
+
+
+
+
+
+
+
+
+
+building containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+building containers: 100%|██████████| 1/1 [00:00<00:00,  5.17it/s][A[A[A[A[A[A[A[A[A[A
+building containers: 100%|██████████| 1/1 [00:00<00:00,  5.13it/s]
+
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s][A2025-02-13 18:46:01,480 - swebench_env.swebench_evaluator - INFO - Container for astropy__astropy-14182---2f6f1bbf-e4a2-486a-9f24-f3ac5d6c8ca0 created: 1857a2ef449d5fda48f96dd2fe8eb01393c0f24204318ca575f4c65d95199828
+
+
+
+
+
+
+
+building containers: 100%|██████████| 1/1 [00:00<00:00,  5.78it/s][A[A[A[A[A[A2025-02-13 18:46:01,482 - swebench_env.swebench_evaluator - INFO - Environment image sweb.env.x86_64.428468730904ff6b4232aa:latest found for astropy__astropy-13453---02d1d908-c6a0-4742-aa16-4ae1a919e529
+Building instance image sweb.eval.x86_64.astropy__astropy-13453---02d1d908-c6a0-4742-aa16-4ae1a919e529:latest for astropy__astropy-13453---02d1d908-c6a0-4742-aa16-4ae1a919e529
+
+building containers: 100%|██████████| 1/1 [00:00<00:00,  5.68it/s]
+
+
+
+
+
+
+
+
+
+
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.34it/s][A[A[A[A[A[A[A[A[A2025-02-13 18:46:01,482 - swebench_env.swebench_evaluator - INFO - Image sweb.eval.x86_64.astropy__astropy-13033---4db6e0e0-42ec-4775-abd8-a119477f240b:latest already exists, skipping build.
+2025-02-13 18:46:01,486 - swebench_env.swebench_evaluator - INFO - Creating container for astropy__astropy-13033---4db6e0e0-42ec-4775-abd8-a119477f240b...
+
+
+
+
+
+
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.34it/s]
+All instance images built successfully.
+1 images built successfully, failed building 0 images
+
+
+
+
+
+
+
+
+
+
+building containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A2025-02-13 18:46:01,501 - swebench_env.swebench_evaluator - INFO - Container for django__django-10880---1f86cfdf-727e-4b24-ad9a-eccdbab199d6 created: df26394acadf5d49aeb8f8bc014ffe9ce5f75c4b389a4b7569925388b6547b99
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+building containers: 100%|██████████| 1/1 [00:00<00:00,  6.40it/s][A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+building containers: 100%|██████████| 1/1 [00:00<00:00,  6.38it/s]
+
+
+
+
+
+
+
+
+
+
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s]2025-02-13 18:46:01,505 - swebench_env.swebench_evaluator - INFO - Image sweb.eval.x86_64.astropy__astropy-14096---60d4ae24-6871-416e-bab8-e07f960e44d9:latest already exists, skipping build.
+2025-02-13 18:46:01,506 - swebench_env.swebench_evaluator - INFO - Creating container for astropy__astropy-14096---60d4ae24-6871-416e-bab8-e07f960e44d9...
+[A[A[A[A[A[A[A[A[A[A2025-02-13 18:46:01,506 - swebench_env.swebench_evaluator - INFO - Environment image sweb.env.x86_64.428468730904ff6b4232aa:latest found for astropy__astropy-14598---07f59b8d-92cc-4962-a768-84464f2111b7
+Building instance image sweb.eval.x86_64.astropy__astropy-14598---07f59b8d-92cc-4962-a768-84464f2111b7:latest for astropy__astropy-14598---07f59b8d-92cc-4962-a768-84464f2111b7
+
+
+
+
+
+
+
+
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.31it/s][A[A[A[A[A[A[A
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.31it/s]
+All instance images built successfully.
+1 images built successfully, failed building 0 images
+
+
+
+
+
+
+
+
+building containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A2025-02-13 18:46:01,531 - swebench_env.swebench_evaluator - INFO - Container for astropy__astropy-14539---40b6af03-eba0-467a-aa28-a773207a3b89 created: 74eee4a658d3dc29e4793dfe6af3eb7942c8608396dd8fd8c42b3e646ee84755
+
+
+
+
+
+building containers: 100%|██████████| 1/1 [00:00<00:00,  5.63it/s][A[A[A[A
+building containers: 100%|██████████| 1/1 [00:00<00:00,  5.62it/s]
+
+
+
+
+2025-02-13 18:46:01,535 - swebench_env.swebench_evaluator - INFO - Environment image sweb.env.x86_64.428468730904ff6b4232aa:latest found for astropy__astropy-14508---0c463b7b-506c-4fbd-8f76-0239745860a3
+Building instance image sweb.eval.x86_64.astropy__astropy-14508---0c463b7b-506c-4fbd-8f76-0239745860a3:latest for astropy__astropy-14508---0c463b7b-506c-4fbd-8f76-0239745860a3
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A2025-02-13 18:46:01,536 - swebench_env.swebench_evaluator - INFO - Image sweb.eval.x86_64.astropy__astropy-13453---02d1d908-c6a0-4742-aa16-4ae1a919e529:latest already exists, skipping build.
+2025-02-13 18:46:01,539 - swebench_env.swebench_evaluator - INFO - Creating container for astropy__astropy-13453---02d1d908-c6a0-4742-aa16-4ae1a919e529...
+
+
+
+
+
+
+
+
+
+
+
+
+
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.26it/s][A[A[A[A[A[A[A[A[A[A[A[A
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.25it/s]
+All instance images built successfully.
+1 images built successfully, failed building 0 images
+
+
+
+
+
+
+
+
+
+
+
+
+
+building containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A[A2025-02-13 18:46:01,566 - swebench_env.swebench_evaluator - INFO - Environment image sweb.env.x86_64.428468730904ff6b4232aa:latest found for astropy__astropy-14995---d81011fe-201a-447d-a2f1-04f28ae8e733
+Building instance image sweb.eval.x86_64.astropy__astropy-14995---d81011fe-201a-447d-a2f1-04f28ae8e733:latest for astropy__astropy-14995---d81011fe-201a-447d-a2f1-04f28ae8e733
+2025-02-13 18:46:01,567 - swebench_env.swebench_evaluator - INFO - Image sweb.eval.x86_64.astropy__astropy-14598---07f59b8d-92cc-4962-a768-84464f2111b7:latest already exists, skipping build.
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s]
+2025-02-13 18:46:01,568 - swebench_env.swebench_evaluator - INFO - Environment image sweb.env.x86_64.428468730904ff6b4232aa:latest found for astropy__astropy-13579---365e7cef-2419-4000-8710-b1032a2263ab
+Building instance image sweb.eval.x86_64.astropy__astropy-13579---365e7cef-2419-4000-8710-b1032a2263ab:latest for astropy__astropy-13579---365e7cef-2419-4000-8710-b1032a2263ab
+
+
+
+
+
+
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.21it/s][A[A[A[A[A2025-02-13 18:46:01,570 - swebench_env.swebench_evaluator - INFO - Image sweb.eval.x86_64.astropy__astropy-14995---d81011fe-201a-447d-a2f1-04f28ae8e733:latest already exists, skipping build.
+2025-02-13 18:46:01,575 - swebench_env.swebench_evaluator - INFO - Creating container for astropy__astropy-14995---d81011fe-201a-447d-a2f1-04f28ae8e733...
+2025-02-13 18:46:01,571 - swebench_env.swebench_evaluator - INFO - Creating container for astropy__astropy-14598---07f59b8d-92cc-4962-a768-84464f2111b7...
+
+Building instance images: 100%|██████████| 1/1 [00:00<00:00,  1.20it/s]
+2025-02-13 18:46:01,575 - swebench_env.swebench_evaluator - INFO - Container for astropy__astropy-13033---4db6e0e0-42ec-4775-abd8-a119477f240b created: 9463743fe5acc52ea8c44144cc412ffb40b8ed1567c0294f8830eb7bf2c19c7c
+All instance images built successfully.
+1 images built successfully, failed building 0 images
+2025-02-13 18:46:01,571 - swebench_env.swebench_evaluator - INFO - Image sweb.eval.x86_64.astropy__astropy-14508---0c463b7b-506c-4fbd-8f76-0239745860a3:latest already exists, skipping build.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+building containers: 100%|██████████| 1/1 [00:00<00:00,  4.93it/s][A[A[A[A[A[A[A[A[A[A[A[A[A2025-02-13 18:46:01,577 - swebench_env.swebench_evaluator - INFO - Image sweb.eval.x86_64.astropy__astropy-13579---365e7cef-2419-4000-8710-b1032a2263ab:latest already exists, skipping build.
+2025-02-13 18:46:01,584 - swebench_env.swebench_evaluator - INFO - Creating container for astropy__astropy-13579---365e7cef-2419-4000-8710-b1032a2263ab...
+
+building containers: 100%|██████████| 1/1 [00:00<00:00,  4.90it/s]
+2025-02-13 18:46:01,583 - swebench_env.swebench_evaluator - INFO - Environment image sweb.env.x86_64.428468730904ff6b4232aa:latest found for astropy__astropy-13236---e6ae8ec9-ca76-4be9-9596-f772144fcc3e
+Building instance image sweb.eval.x86_64.astropy__astropy-13236---e6ae8ec9-ca76-4be9-9596-f772144fcc3e:latest for astropy__astropy-13236---e6ae8ec9-ca76-4be9-9596-f772144fcc3e
+
+
+
+
+building containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A2025-02-13 18:46:01,583 - swebench_env.swebench_evaluator - INFO - Creating container for astropy__astropy-14508---0c463b7b-506c-4fbd-8f76-0239745860a3...
+
+
+
+
+
+2025-02-13 18:46:01,589 - swebench_env.swebench_evaluator - INFO - Image sweb.eval.x86_64.astropy__astropy-13236---e6ae8ec9-ca76-4be9-9596-f772144fcc3e:latest already exists, skipping build.
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A2025-02-13 18:46:01,594 - swebench_env.swebench_evaluator - INFO - Creating container for astropy__astropy-13236---e6ae8ec9-ca76-4be9-9596-f772144fcc3e...
+2025-02-13 18:46:01,597 - swebench_env.swebench_evaluator - INFO - Container for astropy__astropy-14096---60d4ae24-6871-416e-bab8-e07f960e44d9 created: 009fc60b708bf106a035b660e9c4f7a527639721741fba13266939b05f67cc4b
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+building containers: 100%|██████████| 1/1 [00:00<00:00,  5.11it/s][A[A[A[A[A[A[A[A[A[A[A[A[A[A
+building containers: 100%|██████████| 1/1 [00:00<00:00,  5.10it/s]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A[A[A2025-02-13 18:46:01,617 - swebench_env.swebench_evaluator - INFO - Container for astropy__astropy-13453---02d1d908-c6a0-4742-aa16-4ae1a919e529 created: f6fc34f35174549b59a72bb7ac5d6344b88da706291bc0073565af9c0682ae69
+
+
+
+building containers: 100%|██████████| 1/1 [00:00<00:00,  5.64it/s][A[A
+building containers: 100%|██████████| 1/1 [00:00<00:00,  5.63it/s]
+
+
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A2025-02-13 18:46:01,630 - swebench_env.swebench_evaluator - INFO - Container for astropy__astropy-14995---d81011fe-201a-447d-a2f1-04f28ae8e733 created: 7f423f074998a5cecf0ef9883359912b62cfe07a6254205e93bfb22f07d74d24
+
+
+
+
+
+
+
+
+building containers: 100%|██████████| 1/1 [00:00<00:00,  8.70it/s][A[A[A[A[A[A[A
+building containers: 100%|██████████| 1/1 [00:00<00:00,  8.66it/s]
+
+
+
+
+
+
+
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A2025-02-13 18:46:01,636 - swebench_env.swebench_evaluator - INFO - Container for astropy__astropy-13579---365e7cef-2419-4000-8710-b1032a2263ab created: 0e5091cdcbe041ae2e7ee357e8f92c693dfd69879e6b388ba565df52283c382c
+
+building containers: 100%|██████████| 1/1 [00:00<00:00, 10.93it/s]
+2025-02-13 18:46:01,640 - swebench_env.swebench_evaluator - INFO - Container for astropy__astropy-14598---07f59b8d-92cc-4962-a768-84464f2111b7 created: 69ca4f282628c4e8372a50dc8882c3ae638624a8718ccab913dabc35c435aeb1
+
+
+
+
+
+
+
+
+
+
+
+
+building containers: 100%|██████████| 1/1 [00:00<00:00,  5.63it/s][A[A[A[A[A[A[A[A[A[A[A2025-02-13 18:46:01,642 - swebench_env.swebench_evaluator - INFO - Container for astropy__astropy-14508---0c463b7b-506c-4fbd-8f76-0239745860a3 created: 92e3a93ceb5e1774fb3eecadd9038d1d2e506d97292c3ca2f3b980ce866f36c8
+
+building containers: 100%|██████████| 1/1 [00:00<00:00,  5.58it/s]
+
+
+
+
+
+
+
+
+
+
+building containers: 100%|██████████| 1/1 [00:00<00:00,  6.65it/s][A[A[A[A[A[A[A[A[A
+building containers: 100%|██████████| 1/1 [00:00<00:00,  6.63it/s]
+
+
+
+
+
+
+
+
+
+
+
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A[A2025-02-13 18:46:01,650 - swebench_env.swebench_evaluator - INFO - Container for astropy__astropy-13236---e6ae8ec9-ca76-4be9-9596-f772144fcc3e created: e17cb34d5224a9be848faa65ee73761f0496a32b538219401c6528818bedc7c9
+
+building containers: 100%|██████████| 1/1 [00:00<00:00, 16.59it/s]
+
+
+
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s][A[A[A
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s]
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s]
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s]
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s]
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s]
+
+starting containers:   0%|          | 0/1 [00:00<?, ?it/s]
+
+starting containers:   0%|          | 0/1 [00:01<?, ?it/s]
+
+  0%|          | 0/16 [00:01<?, ?it/s]
+
+starting containers:   0%|          | 0/1 [00:01<?, ?it/s]
+
+starting containers:   0%|          | 0/1 [00:01<?, ?it/s]
+
+starting containers:   0%|          | 0/1 [00:01<?, ?it/s]
+
+starting containers:   0%|          | 0/1 [00:01<?, ?it/s]
+
+starting containers:   0%|          | 0/1 [00:01<?, ?it/s]
+
+starting containers:   0%|          | 0/1 [00:01<?, ?it/s]
+
+starting containers:   0%|          | 0/1 [00:01<?, ?it/s]
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/ubuntu/swe_bench_rl/.venv/lib/python3.10/site-packages/docker/api/client.py", line 275, in _raise_for_status
+[rank0]:     response.raise_for_status()
+[rank0]:   File "/home/ubuntu/swe_bench_rl/.venv/lib/python3.10/site-packages/requests/models.py", line 1024, in raise_for_status
+[rank0]:     raise HTTPError(http_error_msg, response=self)
+[rank0]: requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: http+docker://localhost/v1.47/containers/9463743fe5acc52ea8c44144cc412ffb40b8ed1567c0294f8830eb7bf2c19c7c/start
+
+[rank0]: The above exception was the direct cause of the following exception:
+
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "<string>", line 1, in <module>
+[rank0]:   File "/home/ubuntu/swe_bench_rl/swebench_env/swebench_env.py", line 172, in main_2
+[rank0]:     states = threaded_map((delayed(env.init_state)(datapoint) for datapoint in dataset), max_workers=32)
+[rank0]:   File "<@beartype(swebench_env.threaded_map.threaded_map) at 0x73d93ddd0670>", line 72, in threaded_map
+[rank0]:   File "/home/ubuntu/swe_bench_rl/swebench_env/threaded_map.py", line 33, in threaded_map
+[rank0]:     results.append(future.result())
+[rank0]:   File "/usr/lib/python3.10/concurrent/futures/_base.py", line 458, in result
+[rank0]:     return self.__get_result()
+[rank0]:   File "/usr/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[rank0]:     raise self._exception
+[rank0]:   File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+[rank0]:     result = self.fn(*self.args, **self.kwargs)
+[rank0]:   File "/home/ubuntu/swe_bench_rl/swebench_env/threaded_map.py", line 30, in <lambda>
+[rank0]:     futures = [executor.submit(lambda f: f(), f) for f in delayed_functions]
+[rank0]:   File "/home/ubuntu/swe_bench_rl/swebench_env/threaded_map.py", line 12, in <lambda>
+[rank0]:     return lambda: function(*args, **kwargs)
+[rank0]:   File "/home/ubuntu/swe_bench_rl/swebench_env/swebench_env.py", line 49, in init_state
+[rank0]:     evaluator = SweBenchEvaluator(dataset=[data], max_workers=1)
+[rank0]:   File "<@beartype(swebench_env.swebench_evaluator.SweBenchEvaluator.__init__) at 0x73d93ddd37f0>", line 69, in __init__
+[rank0]:   File "/home/ubuntu/swe_bench_rl/swebench_env/swebench_evaluator.py", line 136, in __init__
+[rank0]:     self._build_and_start_containers()
+[rank0]:   File "<@beartype(swebench_env.swebench_evaluator.SweBenchEvaluator._build_and_start_containers) at 0x73d93ddd3880>", line 12, in _build_and_start_containers
+[rank0]:   File "/home/ubuntu/swe_bench_rl/swebench_env/swebench_evaluator.py", line 199, in _build_and_start_containers
+[rank0]:     threaded_map(
+[rank0]:   File "<@beartype(swebench_env.threaded_map.threaded_map) at 0x73d93ddd0670>", line 72, in threaded_map
+[rank0]:   File "/home/ubuntu/swe_bench_rl/swebench_env/threaded_map.py", line 33, in threaded_map
+[rank0]:     results.append(future.result())
+[rank0]:   File "/usr/lib/python3.10/concurrent/futures/_base.py", line 458, in result
+[rank0]:     return self.__get_result()
+[rank0]:   File "/usr/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[rank0]:     raise self._exception
+[rank0]:   File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+[rank0]:     result = self.fn(*self.args, **self.kwargs)
+[rank0]:   File "/home/ubuntu/swe_bench_rl/swebench_env/threaded_map.py", line 30, in <lambda>
+[rank0]:     futures = [executor.submit(lambda f: f(), f) for f in delayed_functions]
+[rank0]:   File "/home/ubuntu/swe_bench_rl/swebench_env/threaded_map.py", line 12, in <lambda>
+[rank0]:     return lambda: function(*args, **kwargs)
+[rank0]:   File "/home/ubuntu/swe_bench_rl/.venv/lib/python3.10/site-packages/docker/models/containers.py", line 420, in start
+[rank0]:     return self.client.api.start(self.id, **kwargs)
+[rank0]:   File "/home/ubuntu/swe_bench_rl/.venv/lib/python3.10/site-packages/docker/utils/decorators.py", line 19, in wrapped
+[rank0]:     return f(self, resource_id, *args, **kwargs)
+[rank0]:   File "/home/ubuntu/swe_bench_rl/.venv/lib/python3.10/site-packages/docker/api/container.py", line 1136, in start
+[rank0]:     self._raise_for_status(res)
+[rank0]:   File "/home/ubuntu/swe_bench_rl/.venv/lib/python3.10/site-packages/docker/api/client.py", line 277, in _raise_for_status
+[rank0]:     raise create_api_error_from_http_exception(e) from e
+[rank0]:   File "/home/ubuntu/swe_bench_rl/.venv/lib/python3.10/site-packages/docker/errors.py", line 39, in create_api_error_from_http_exception
+[rank0]:     raise cls(e, response=response, explanation=explanation) from e
+[rank0]: docker.errors.APIError: 500 Server Error for http+docker://localhost/v1.47/containers/9463743fe5acc52ea8c44144cc412ffb40b8ed1567c0294f8830eb7bf2c19c7c/start: Internal Server Error ("failed to create endpoint sweb.eval.astropy__astropy-13033---4db6e0e0-42ec-4775-abd8-a119477f240b.run on network bridge: adding interface veth574604f to bridge docker0 failed: exchange full")
+ERROR 02-13 18:46:06 multiproc_worker_utils.py:122] Worker VllmWorkerProcess pid 1631342 died, exit code: -15
+INFO 02-13 18:46:06 multiproc_worker_utils.py:126] Killing local vLLM worker processes
+[rank0]:[W213 18:46:13.952256473 ProcessGroupNCCL.cpp:1250] Warning: WARNING: process group has NOT been destroyed before we destruct ProcessGroupNCCL. On normal program exit, the application should call destroy_process_group to ensure that any pending NCCL operations have finished in this process. In rare cases this process can exit before this point and block the progress of another member of the process group. This constraint has always been present,  but this warning has only been added since PyTorch 2.4 (function operator())
+/usr/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 1 leaked shared_memory objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
