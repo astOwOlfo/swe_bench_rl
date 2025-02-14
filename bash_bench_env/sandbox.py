@@ -96,11 +96,13 @@ class DockerSandbox:
 
     def cleanup(self) -> None:
         # Stop container
-        subprocess.run(
+        docker_stop_response = subprocess.run(
             ["docker", "stop", self.container_name],
             capture_output=True,
             text=True
         )
+
+        print(f"{docker_stop_response=}")
         
         # Remove container
         subprocess.run(

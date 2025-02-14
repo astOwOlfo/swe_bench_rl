@@ -16,21 +16,21 @@ uv run ray job submit --address="http://127.0.0.1:8265" \
   --vllm_tensor_parallel_size 2 \
   --pretrain Qwen/Qwen2.5-Coder-32B-Instruct \
   --save_path checkpoint/dummy_rl \
-  --micro_train_batch_size 1 \
-  --train_batch_size 4 \
-  --micro_rollout_batch_size 4 \
-  --rollout_batch_size 4 \
+  --micro_train_batch_size 12 \
+  --train_batch_size 48 \
+  --micro_rollout_batch_size 12 \
+  --rollout_batch_size 48 \
   --n_samples_per_prompt 3 \
   --max_samples 10000 \
   --max_epochs 1 \
-  --prompt_max_len 256 \
-  --generate_max_len 256 \
+  --prompt_max_len 2048 \
+  --generate_max_len 2048 \
   --zero_stage 3 \
   --bf16 \
   --actor_learning_rate 1e-6 \
   --critic_learning_rate 1e-5 \
   --init_kl_coef 0.01 \
-  --prompt_data /home/ubuntu/data/swebench_verified_only_containers_which_build.json \
+  --prompt_data /home/ubuntu/vlad/bash-bench/valid_tasks-repeated.json \
   --input_key problem_statement \
   --apply_chat_template \
   --normalize_reward \
@@ -39,7 +39,7 @@ uv run ray job submit --address="http://127.0.0.1:8265" \
   --flash_attn \
   --gradient_checkpointing \
   --use_wandb $WANDB_API_KEY \
-  --wandb_project swebench_rl \
+  --wandb_project bash_bench_rl \
   --advantage_estimator grpo \
   --env_file bash_bench_env \
   --env_class BashBenchEnv \

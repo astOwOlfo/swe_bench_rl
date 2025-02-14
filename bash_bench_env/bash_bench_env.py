@@ -154,10 +154,12 @@ def main_2() -> None:
         whole_dataset = json.load(f)
 
     llm = LLM(
-        model="Qwen/Qwen2.5-Coder-32B-Instruct",
+        # model="Qwen/Qwen2.5-Coder-32B-Instruct",
+        model="deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
         quantization="fp8",
         enable_prefix_caching=True,
         tensor_parallel_size=8,
+        trust_remote_code=True,
     )
 
     for dataset in chunked(whole_dataset, 64):
@@ -193,7 +195,7 @@ def main_2() -> None:
             )
             for output, conversation in zip(new_messages, unfinished_conversations, strict=True):
                 conversation.append({"role": "assistant", "content": output.outputs[0].text})
-
+ 
             unfinished_states = [state for i, state in enumerate(unfinished_states) if i not in finished_indices]
             unfinished_conversations = [conversation for i, conversation in enumerate(unfinished_conversations) if i not in finished_indices]
 
