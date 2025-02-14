@@ -41,5 +41,5 @@ uv run ray job submit --address="http://127.0.0.1:8265" \
   --use_wandb $WANDB_API_KEY \
   --wandb_project swebench_rl \
   --advantage_estimator grpo \
-  --env_file swebench_env \
-  --env_class SweBenchEnv \
+  --env_file bash_bench_env \
+  --env_class BashBenchEnv \

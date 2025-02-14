@@ -4,3 +4,4 @@ uv.lock
 .env
 checkpoint/
 logs/
+nohup.out
