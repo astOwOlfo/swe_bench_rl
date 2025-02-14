@@ -14,7 +14,8 @@ dependencies = [
     "beartype",
     "swebench==2.1.8",
     "inspect_ai",
-    "inspect_evals[swe_bench]"
+    "inspect_evals[swe_bench]",
+    "xgrammar==0.1.11",
 ]
 
 [build-system]
