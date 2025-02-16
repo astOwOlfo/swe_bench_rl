@@ -20,6 +20,7 @@ class DockerSandbox:
     def __init__(self):
         self.container_name = ""
         self.container_name = f"bash-sandbox-instance-{uuid4()}"
+        print(f"CREATING SANDBOX {self.container_name}")
         self.build_image()
         self.start_container()
 
@@ -95,18 +96,22 @@ class DockerSandbox:
             )
 
     def cleanup(self) -> None:
-        # Stop container
         docker_stop_response = subprocess.run(
             ["docker", "stop", self.container_name],
             capture_output=True,
             text=True
         )
 
-        print(f"{docker_stop_response=}")
-        
-        # Remove container
-        subprocess.run(
+        docker_remove_response = subprocess.run(
             ["docker", "rm", self.container_name],
             capture_output=True,
             text=True
+        )
+
+        process = subprocess.Popen(
+            f"docker stop {self.container_name}; docker rm {self.container_name}",
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
         )

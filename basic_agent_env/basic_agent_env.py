@@ -367,7 +367,7 @@ class BasicAgentEnv(AgentInterface):
         if len(messages) == 0:
             prompt = agent_instruction_message(
                 prompt=self.get_prompt(state.data),
-                tools=self.get_tools(state.data),
+                tools=state.tools,
                 can_finish=self.can_finish,
             )
             message = {"role": "user", "content": prompt}

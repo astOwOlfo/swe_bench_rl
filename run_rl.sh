@@ -14,18 +14,18 @@ uv run ray job submit --address="http://127.0.0.1:8265" \
   --actor_num_gpus_per_node 4 \
   --vllm_num_engines 1 \
   --vllm_tensor_parallel_size 2 \
-  --pretrain Qwen/Qwen2.5-Coder-32B-Instruct \
+  --pretrain deepseek-ai/DeepSeek-R1-Distill-Qwen-14B \
   --save_path checkpoint/dummy_rl \
-  --micro_train_batch_size 12 \
+  --micro_train_batch_size 2 \
   --train_batch_size 48 \
   --micro_rollout_batch_size 12 \
   --rollout_batch_size 48 \
   --n_samples_per_prompt 3 \
   --max_samples 10000 \
-  --max_epochs 1 \
+  --max_epochs 3 \
   --prompt_max_len 2048 \
   --generate_max_len 2048 \
-  --zero_stage 3 \
+  --zero_stage 2 \
   --bf16 \
   --actor_learning_rate 1e-6 \
   --critic_learning_rate 1e-5 \
