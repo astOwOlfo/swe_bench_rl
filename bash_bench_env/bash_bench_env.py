@@ -223,3 +223,46 @@ def main_2() -> None:
                         continue
                     print(field.upper(), value)
                 print("CONTENT:", message["content"])
+
+
+@beartype
+def main_3() -> None:
+    import openrlhf
+    print(f"{openrlhf.__file__=}")
+
+    from vllm import LLM, SamplingParams
+
+    llm = LLM(
+        model="deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+        quantization="fp8",
+        enable_prefix_caching=True,
+        tensor_parallel_size=8,
+        trust_remote_code=True,
+    )
+
+    with open("/home/ubuntu/vlad/bash-bench/valid_tasks.json", "r") as f:
+        whole_dataset = json.load(f)
+
+    for datapoint in whole_dataset[:1]:
+        env = BashBenchEnv(
+            full_data=whole_dataset,
+            sampling_params=SamplingParams(max_tokens=4096),
+            vllm_engine=llm,
+        )
+
+        print(list(type(env).__mro__))
+
+        conversation, reward = env.run(datapoint)
+
+        print("+" * 100)
+        print("+" * 100)
+        print("+" * 100)
+        print(f"AGENT LOOP FINISHED ------- REWARD: {reward}")
+        for message in conversation:
+            print("=" * 100)
+            for field, value in message.items():
+                if field == "content":
+                    continue
+                print(field.upper(), value)
+            print("CONTENT:", message["content"])
+

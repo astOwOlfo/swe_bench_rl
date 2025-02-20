@@ -37,7 +37,7 @@ class SweBenchEnv(AgentInterface):
     def __init__(
         self,
         *args,
-        max_steps: int = 4,
+        max_steps: int = 2,
         can_finish: bool = True,
         **kwargs,
     ):

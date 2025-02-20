@@ -1,3 +1,4 @@
+from vllm import LLM, SamplingParams
 import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
