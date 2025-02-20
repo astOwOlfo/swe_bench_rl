@@ -1,3 +1,4 @@
+from time import perf_counter
 import json
 from dataclasses import dataclass
 from beartype import beartype
@@ -70,14 +71,22 @@ PRIVATE_TEST_REWARD: float = 0.8
 @beartype
 class BashBenchEnv(BasicAgentEnv):
     def get_tools(self, data: dict) -> list[Tool]:
+        start_time = perf_counter()
+        
         sandbox = DockerSandbox()
         sandbox.run_command(f"cat << EOF > public_tests.py\n{data['public_tests']}\nEOF")
+
+        end_time = perf_counter()
+        print("time spent creating sandbox:", end_time - start_time, "seconds")
+
         return [BashTool(sandbox=sandbox)]
 
     def get_prompt(self, data: dict) -> str:
         return data["task_description"].removeprefix("Task: ") + "\n\nYou can test whether what you did is correct by running `python public_tests.py`."
 
     def get_reward(self, messages: list[Message], state: BasicAgentState) -> float:
+        start_time = perf_counter()
+
         bash_tool = next(
             iter(tool for tool in state.tools if isinstance(tool, BashTool))
         )
@@ -97,6 +106,10 @@ class BashBenchEnv(BasicAgentEnv):
             reward += PUBLIC_TEST_REWARD
         if private_tests_passed:
             reward += PRIVATE_TEST_REWARD
+
+        end_time = perf_counter()
+        print("time spent computing reward:", end_time - start_time, "seconds")
+        
         return reward
 
 
