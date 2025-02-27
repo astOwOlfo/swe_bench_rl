@@ -164,29 +164,36 @@ def main_2() -> None:
 
 
     with open("/home/ubuntu/vlad/bash-bench/valid_tasks.json", "r") as f:
+    # with open("/home/ubuntu/vlad/bash-bench/valid_tasks-simplified.json", "r") as f:
+    # with open("/home/ubuntu/vlad/bash-bench/valid_tasks-simplified-even-more.json", "r") as f:
         whole_dataset = json.load(f)
 
     llm = LLM(
         # model="Qwen/Qwen2.5-Coder-32B-Instruct",
         model="deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+        # model="Qwen/Qwen2.5-Coder-32B-Instruct",
+        # model="deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
         quantization="fp8",
         enable_prefix_caching=True,
-        tensor_parallel_size=8,
+        tensor_parallel_size=4,
         trust_remote_code=True,
     )
+
+    max_steps = 4
 
     for dataset in chunked(whole_dataset, 64):
         env = BashBenchEnv(
             full_data=dataset,
             sampling_params=None,
             vllm_engine=None,
+            max_steps=max_steps,
         )
 
         states = threaded_map((delayed(env.init_state)(datapoint) for datapoint in dataset), max_workers=32)
         unfinished_states = states.copy()
         conversations = [[] for _ in dataset]
         unfinished_conversations = conversations.copy()
-        for step in range(8):
+        for step in range(max_steps):
             next_messages_and_states = threaded_map(
                 (
                     delayed(env.get_next_prompt)(conversation, state)
@@ -241,7 +248,6 @@ def main_2() -> None:
 @beartype
 def main_3() -> None:
     import openrlhf
-    print(f"{openrlhf.__file__=}")
 
     from vllm import LLM, SamplingParams
 
@@ -261,6 +267,7 @@ def main_3() -> None:
             full_data=whole_dataset,
             sampling_params=SamplingParams(max_tokens=4096),
             vllm_engine=llm,
+            max_steps=4,
         )
 
         print(list(type(env).__mro__))

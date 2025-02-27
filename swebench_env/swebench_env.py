@@ -1,5 +1,3 @@
-from docker.client import DockerClient
-from docker.models.containers import Container
 from openrlhf.utils.interface import AgentInterface
 from dataclasses import dataclass
 
@@ -49,7 +47,9 @@ class SweBenchEnv(AgentInterface):
         evaluator = SweBenchEvaluator(dataset=[data], max_workers=1)
         evaluator.__enter__()
 
-        tools: list[Tool] = [BashTool(evaluator.containers[0])] if len(evaluator.containers) > 0 else []
+        tools: list[Tool] = (
+            [BashTool(evaluator.containers[0])] if len(evaluator.containers) > 0 else []
+        )
         if self.can_finish:
             tools.append(FinishTool())
 
@@ -62,7 +62,9 @@ class SweBenchEnv(AgentInterface):
 
         if len(messages) == 0:
             prompt = agent_instruction_message(
-                prompt=state.evaluator.problem_statements[0] if len(state.evaluator.problem_statements) > 0 else "There was an error initializing the github issue.",
+                prompt=state.evaluator.problem_statements[0]
+                if len(state.evaluator.problem_statements) > 0
+                else "There was an error initializing the github issue.",
                 tools=state.tools,
                 can_finish=self.can_finish,
             )
@@ -123,9 +125,68 @@ class SweBenchEnv(AgentInterface):
         return reward
 
 
+ALL_SWE_BENCH_REPOSITORIES = [
+    "docker/compose",
+    "pyca/cryptography",
+    "dagster-io/dagster",
+    "wagtail/wagtail",
+    "qiskit/qiskit",
+    "pypa/pip",
+    "ray-project/ray",
+    "python/typeshed",
+    "johnsnowlabs/spark-nlp",
+    "pandas-dev/pandas",
+    "huggingface/transformers",
+    "open-mmlab/mmdetection",
+    "google/jax",
+    "mesonbuild/meson",
+    "numpy/numpy",
+    "tensorflow/models",
+    "tiangolo/fastapi",
+    "ipython/ipython",
+    "lightning-ai/lightning",
+    "ytdl-org/youtube-dl",
+    "datadog/integrations-core",
+    "pantsbuild/pants",
+    "twisted/twisted",
+    "apache/mxnet",
+    "prefecthq/prefect",
+    "kubeflow/pipelines",
+    "apache/airflow",
+    "celery/celery",
+    "conan-io/conan",
+    "conda/conda",
+    "jupyterlab/jupyterlab",
+    "gitpython-developers/gitpython",
+    "scipy/scipy",
+    "googleapis/google-cloud-python",
+    "explosion/spacy",
+]
+
+
+def setup_non_verified_swe_bench() -> None:
+    from swebench.harness.constants import MAP_REPO_VERSION_TO_SPECS
+    from swebench.harness.grading import MAP_REPO_TO_PARSER
+    from swebench.harness.log_parsers import parse_log_pytest
+
+    for repository in ALL_SWE_BENCH_REPOSITORIES:
+        MAP_REPO_VERSION_TO_SPECS[repository] = {
+            "": {
+                "python": "3.10",
+                "install": "pip install -e .[test] --verbose",
+                "test_cmd": "pytest -rA",
+            }
+        }
+        MAP_REPO_TO_PARSER[repository] = parse_log_pytest
+
+
 def main() -> None:
     from datasets import load_dataset
+    from random import Random
 
+    setup_non_verified_swe_bench()
+
+    """
     dataset = load_dataset("princeton-nlp/SWE-bench_Verified", split="test")
     dataset = [
         datapoint
@@ -133,16 +194,27 @@ def main() -> None:
         if datapoint["instance_id"] == "astropy__astropy-13033"
     ]
     assert len(dataset) == 1
+    """
+
+    dataset = load_dataset("princeton-nlp/SWE-bench", split="train")
+    # print(f"{list(set(datapoint['repo'].lower() for datapoint in dataset))=}")
+    # dataset = [list(dataset)[1234]]
+    dataset = list(dataset)
+    Random(42).shuffle(dataset)
+    for datapoint in dataset:
+        datapoint["repo"] = datapoint["repo"].lower()
+        datapoint["instance_id"] = datapoint["instance_id"].lower()
 
     environment = SweBenchEnv(full_data=dataset, sampling_params=None, vllm_engine=None)
-    state = environment.init_state(dataset[0])
-    environment_2 = SweBenchEnv(
-        full_data=dataset, sampling_params=None, vllm_engine=None
-    )
-    state_2 = environment_2.init_state(dataset[0])
-    messages = []
-    messages, state = environment.get_next_prompt(messages, state)
-    reward = environment.get_reward(messages, state)
+    for datapoint in dataset:
+        state = environment.init_state(datapoint)
+        environment_2 = SweBenchEnv(
+            full_data=dataset, sampling_params=None, vllm_engine=None
+        )
+        state_2 = environment_2.init_state(datapoint)
+        messages = []
+        messages, state = environment.get_next_prompt(messages, state)
+        reward = environment.get_reward(messages, state)
 
 
 def main_2() -> None:
@@ -151,7 +223,9 @@ def main_2() -> None:
     from .threaded_map import threaded_map, delayed
     from more_itertools import chunked
 
-    with open("/home/ubuntu/data/swebench_verified_only_containers_which_build.json", "r") as f:
+    with open(
+        "/home/ubuntu/data/swebench_verified_only_containers_which_build.json", "r"
+    ) as f:
         whole_dataset = json.load(f)
 
     llm = LLM(
@@ -159,7 +233,6 @@ def main_2() -> None:
         quantization="fp8",
         enable_prefix_caching=True,
         tensor_parallel_size=8,
-
     )
 
     for dataset in chunked(whole_dataset, 16):
@@ -169,7 +242,10 @@ def main_2() -> None:
             vllm_engine=None,
         )
 
-        states = threaded_map((delayed(env.init_state)(datapoint) for datapoint in dataset), max_workers=32)
+        states = threaded_map(
+            (delayed(env.init_state)(datapoint) for datapoint in dataset),
+            max_workers=32,
+        )
         unfinished_states = states.copy()
         conversations = [[] for _ in dataset]
         unfinished_conversations = conversations.copy()
@@ -177,9 +253,11 @@ def main_2() -> None:
             next_messages_and_states = threaded_map(
                 (
                     delayed(env.get_next_prompt)(conversation, state)
-                    for conversation, state in zip(unfinished_conversations, unfinished_states, strict=True)
+                    for conversation, state in zip(
+                        unfinished_conversations, unfinished_states, strict=True
+                    )
                 ),
-                max_workers=32
+                max_workers=32,
             )
             finished_indices = []
             for i, (message, state) in enumerate(next_messages_and_states):
@@ -191,27 +269,41 @@ def main_2() -> None:
 
             new_messages = llm.chat(
                 unfinished_conversations,
-                sampling_params=SamplingParams(temperature=0.6, max_tokens=4096)
+                sampling_params=SamplingParams(temperature=0.6, max_tokens=4096),
             )
-            for output, conversation in zip(new_messages, unfinished_conversations, strict=True):
-                conversation.append({"role": "assistant", "content": output.outputs[0].text})
+            for output, conversation in zip(
+                new_messages, unfinished_conversations, strict=True
+            ):
+                conversation.append(
+                    {"role": "assistant", "content": output.outputs[0].text}
+                )
 
-            unfinished_states = [state for i, state in enumerate(unfinished_states) if i not in finished_indices]
-            unfinished_conversations = [conversation for i, conversation in enumerate(unfinished_conversations) if i not in finished_indices]
+            unfinished_states = [
+                state
+                for i, state in enumerate(unfinished_states)
+                if i not in finished_indices
+            ]
+            unfinished_conversations = [
+                conversation
+                for i, conversation in enumerate(unfinished_conversations)
+                if i not in finished_indices
+            ]
 
         rewards = threaded_map(
             (
                 delayed(env.get_reward)(conversation, state)
                 for conversation, state in zip(conversations, states, strict=True)
             ),
-            max_workers=32
+            max_workers=32,
         )
 
         print("+" * 100)
         print("+" * 100)
         print("+" * 100)
         print("FINISHED EXECUTING AGENT LOOPS")
-        for i, (conversation, reward) in enumerate(zip(conversations, rewards, strict=True)):
+        for i, (conversation, reward) in enumerate(
+            zip(conversations, rewards, strict=True)
+        ):
             print("+" * 100)
             print("+" * 100)
             print("+" * 100)
