@@ -1,5 +1,6 @@
 from time import perf_counter
 import json
+import re
 from dataclasses import dataclass
 from beartype import beartype
 
@@ -70,21 +71,34 @@ def fraction_tests_passed(sandbox: DockerSandbox, tests: str) -> bool:
     sandbox.run_command(f"cat << EOF > tests.py\n{tests}\nEOF")
 
     test_output = sandbox.run_command("pytest tests.py")
+    test_output = test_output.stdout
 
-    n_passed = len(
-        [line for line in test_output.stdout.splitlines() if "PASSED" in line]
-    )
-    n_failed = len(
-        [line for line in test_output.stdout.splitlines() if "FAILED" in line]
-    )
+    failed_passed_matches = re.findall(r'(\d+) failed, (\d+) passed in', test_output)
+    if failed_passed_matches:
+        n_failed, n_passed = failed_passed_matches[-1]
+        n_failed = int(n_failed)
+        n_passed = int(n_passed)
+        if n_failed == 0 and n_passed == 0:
+            raise ValueError("The bash bench task has zero tests.")
+        return n_passed / (n_failed + n_passed)
+    
+    failed_matches = re.findall(r'(\d+) failed in', test_output)
+    if failed_matches:
+        n_failed = failed_matches[-1]
+        n_failed = int(n_failed)
+        if n_failed == 0:
+            raise ValueError("The bash bench task has zero tests.")
+        return 0.0
 
-    if n_passed == 0 and n_failed == 0:
-        raise ValueError(
-            f"Keywords PASSED and FAILED not found in the stdout of the test script. The expected behavior is that the test script should print, for each test, a line containing PASSED if it passes or a line containing FAILED if it fails. The output of the test script is: {test_output}"
-        )
-
-    return n_passed / (n_passed + n_failed)
-
+    passed_matches = re.findall(r'(\d+) passed in', test_output)
+    if passed_matches:
+        n_passed = passed_matches[-1]
+        n_passed = int(n_passed)
+        if n_passed == 0:
+            raise ValueError("The bash bench task has zero tests.")
+        return 1.0
+    
+    raise ValueError(f"Could not parse pytest output. The output is: {test_output}")
 
 PUBLIC_TEST_REWARD: float = 0.2
 PRIVATE_TEST_REWARD: float = 0.8
@@ -144,11 +158,12 @@ def main() -> None:
         dataset = json.load(f)
 
     env = BashBenchEnv(dataset, None, None)
-    state = env.init_state(dataset[0])
-    message, state = env.get_next_prompt(messages=[], state=state)
-    assert message is not None
-    reward = env.get_reward(messages=[message], state=state)
-    print(f"{reward=}")
+    for datapoint in dataset:
+        state = env.init_state(datapoint)
+        message, state = env.get_next_prompt(messages=[], state=state)
+        assert message is not None
+        reward = env.get_reward(messages=[message], state=state)
+        print(f"{reward=}")
 
 
 def main_2() -> None:

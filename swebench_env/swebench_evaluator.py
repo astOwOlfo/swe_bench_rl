@@ -338,12 +338,8 @@ def swe_bench_solution_evaluation_score(container: Container, datapoint: dict) -
     eval_script_output = container.exec_run("./eval_script").output
 
     print("=" * 250)
-    print("=== EVAL SCRIPT STDOUT ===")
-    print(eval_script_output.stdout)
-    print("=== EVAL SCRIPT STDERR ===")
-    print(eval_script_output.stderr)
-    print("=== EVAL SCRIPT EXIT CODE ===")
-    print(eval_script_output.returncode)
+    print("=== EVAL SCRIPT OUTPUT ===")
+    print(eval_script_output.decode("utf-8"))
     
 
     score, score_explanation = get_score_and_explanation_from_test_output(

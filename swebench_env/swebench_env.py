@@ -35,7 +35,7 @@ class SweBenchEnv(AgentInterface):
     def __init__(
         self,
         *args,
-        max_steps: int = 1,
+        max_steps: int = 4,
         can_finish: bool = True,
         **kwargs,
     ):
@@ -172,23 +172,23 @@ def setup_non_verified_swe_bench() -> None:
     for repository in ALL_SWE_BENCH_REPOSITORIES:
         MAP_REPO_VERSION_TO_SPECS[repository] = {
             "": {
-                "python": "3.11.2",
+                "python": "3.8.0",
                 # "packages": "conans/requirements.txt",
                 "pip_packages": [
                     "paramiko",
-                    "\"docker>=7.1.0\"",
-                    "\"pytest>=7, <8.0.0\"",
+                    '"docker>=7.1.0"',
+                    '"pytest>=7, <8.0.0"',
                     "pytest-xdist",  # To launch in N cores with pytest -n
-                    "\"parameterized>=0.6.3\"",
-                    "\"mock>=1.3.0, <1.4.0\"",
-                    "\"WebTest>=3.0.0, <4\"",
+                    '"parameterized>=0.6.3"',
+                    '"mock>=1.3.0, <1.4.0"',
+                    '"WebTest>=3.0.0, <4"',
                     "bottle",
                     "PyJWT",
                     "pluginbase",
                     "docker",
                     "setuptools",
                     "pytest-cov",
-                    "\"cython<3.0.0\"",
+                    '"cython<3.0.0"',
                     # "\"PyYAML>=6.0, <7.0\"",
                     # "\"requests<3.0.0\"",
                     # '"urllib3<2.1"',
@@ -258,6 +258,99 @@ def main() -> None:
         reward = environment.get_reward(messages, state)
 
         exit()
+
+
+def main_claude() -> None:
+    from datasets import load_dataset
+    from random import Random
+    from anthropic import Anthropic
+
+    model = "claude-3-7-sonnet"
+
+    setup_non_verified_swe_bench()
+
+    """
+    dataset = load_dataset("princeton-nlp/SWE-bench_Verified", split="test")
+    dataset = [
+        datapoint
+        for datapoint in dataset
+        if datapoint["instance_id"] == "astropy__astropy-13033"
+    ]
+    assert len(dataset) == 1
+    """
+
+    from threaded_map import threaded_map, delayed
+
+    dataset = load_dataset("princeton-nlp/SWE-bench", split="train")
+    # print(f"{list(set(datapoint['repo'].lower() for datapoint in dataset))=}")
+    # dataset = [list(dataset)[1234]]
+    dataset = Random(42).sample(list(dataset), k=1)
+    dataset = list(dataset)
+    Random(42).shuffle(dataset)
+    for datapoint in dataset:
+        datapoint["repo"] = datapoint["repo"].lower()
+        datapoint["instance_id"] = datapoint["instance_id"].lower()
+
+    dataset = [
+        datapoint for datapoint in dataset if datapoint["repo"] == "conan-io/conan"
+    ]
+    dataset = [dataset[0]]
+    print(f"{len(dataset)=}")
+
+    client = Anthropic()
+
+    environment = SweBenchEnv(full_data=dataset, sampling_params=None, vllm_engine=None)
+    states = [environment.init_state(datapoint) for datapoint in dataset]
+    messages = [[] for _ in states]
+    unfinished_indices = list(range(len(messages)))
+    rewards = [None for _ in states]
+    while len(states) > 0:
+        next_messages_and_states = threaded_map(
+            (
+                environment.get_next_prompt(messages[i], states[i])
+                for i in unfinished_indices
+            ),
+            max_workers=32,
+        )
+        for i, (message, state) in zip(
+            unfinished_indices.copy(), next_messages_and_states, strict=True
+        ):
+            messages[i].append(message)
+            states[i] = state
+            if environment.is_done(messages[i], states[i]):
+                unfinished_indices.remove(i)
+                rewards[i] = environment.get_reward(messages[i], states[i])
+
+        new_messages = threaded_map(
+            (
+                delayed(client.messages.create)(
+                    messages=messages[i], model=model, max_new_tokens=8192
+                )
+                for i in range(unfinished_indices)
+            ),
+            max_workers=32,
+        )
+        new_messages = [message.content[0].text]
+
+        for i, message in zip(unfinished_indices, new_messages, strict=True):
+            messages[i].append(message)
+
+    print("+" * 100)
+    print("+" * 100)
+    print("+" * 100)
+    print("FINISHED EXECUTING AGENT LOOPS")
+    for i, (conversation, reward) in enumerate(zip(messages, rewards, strict=True)):
+        print("+" * 100)
+        print("+" * 100)
+        print("+" * 100)
+        print(f"AGENT LOOP {i + 1} ------- REWARD: {reward}")
+        for message in conversation:
+            print("=" * 100)
+            for field, value in message.items():
+                if field == "content":
+                    continue
+                print(field.upper(), value)
+            print("CONTENT:", message["content"])
 
 
 def main_2() -> None:
