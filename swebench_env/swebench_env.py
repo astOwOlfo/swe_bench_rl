@@ -172,7 +172,46 @@ def setup_non_verified_swe_bench() -> None:
     for repository in ALL_SWE_BENCH_REPOSITORIES:
         MAP_REPO_VERSION_TO_SPECS[repository] = {
             "": {
-                "python": "3.10",
+                "python": "3.11.2",
+                # "packages": "conans/requirements.txt",
+                "pip_packages": [
+                    "paramiko",
+                    "\"docker>=7.1.0\"",
+                    "\"pytest>=7, <8.0.0\"",
+                    "pytest-xdist",  # To launch in N cores with pytest -n
+                    "\"parameterized>=0.6.3\"",
+                    "\"mock>=1.3.0, <1.4.0\"",
+                    "\"WebTest>=3.0.0, <4\"",
+                    "bottle",
+                    "PyJWT",
+                    "pluginbase",
+                    "docker",
+                    "setuptools",
+                    "pytest-cov",
+                    "\"cython<3.0.0\"",
+                    # "\"PyYAML>=6.0, <7.0\"",
+                    # "\"requests<3.0.0\"",
+                    # '"urllib3<2.1"',
+                    # '"colorama<0.5.0"',
+                    # '"PyYAML<7.0"',
+                    # '"patch-ng<1.19"',
+                    # '"fasteners>=0.15"',
+                    # '"distro<=1.8.0"',  # Quoted to handle semicolon in shell
+                    # '"Jinja==1.2"',
+                    # '"python-dateutil<3"',
+                    # '"pytest<8.0.0"',
+                    # '"pytest-xdist"',
+                    # '"parameterized>=0.6.3"',
+                    # '"mock<1.4.0"',
+                    # '"WebTest<4"',
+                    # '"bottle<0.14"',  # Combined duplicate with version
+                    # '"PyJWT<3.0.0"',  # Combined duplicate with version
+                    # '"pluginbase>=0.5"',  # Combined duplicate with version
+                    # "docker",
+                    # "setuptools",
+                    # "pytest-cov",
+                ],
+                # "install": "pip install --only-binary :all: \"PyYAML>=6.0, <7.0\"; pip install -e .[test] --verbose",
                 "install": "pip install -e .[test] --verbose",
                 "test_cmd": "pytest -rA",
             }
@@ -199,6 +238,7 @@ def main() -> None:
     dataset = load_dataset("princeton-nlp/SWE-bench", split="train")
     # print(f"{list(set(datapoint['repo'].lower() for datapoint in dataset))=}")
     # dataset = [list(dataset)[1234]]
+    dataset = Random(42).sample(list(dataset), k=1)
     dataset = list(dataset)
     Random(42).shuffle(dataset)
     for datapoint in dataset:
@@ -207,6 +247,7 @@ def main() -> None:
 
     environment = SweBenchEnv(full_data=dataset, sampling_params=None, vllm_engine=None)
     for datapoint in dataset:
+        print(f"{datapoint['repo']=}")
         state = environment.init_state(datapoint)
         environment_2 = SweBenchEnv(
             full_data=dataset, sampling_params=None, vllm_engine=None
@@ -215,6 +256,8 @@ def main() -> None:
         messages = []
         messages, state = environment.get_next_prompt(messages, state)
         reward = environment.get_reward(messages, state)
+
+        exit()
 
 
 def main_2() -> None:

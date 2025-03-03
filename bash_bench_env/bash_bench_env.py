@@ -6,6 +6,7 @@ from beartype import beartype
 from .sandbox import DockerSandbox
 from os.path import dirname, abspath
 import sys
+
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
 from basic_agent_env import (
     BasicAgentEnv,
@@ -58,10 +59,31 @@ class BashTool(Tool):
         )
 
 
+@beartype
 def tests_passed(sandbox: DockerSandbox, tests: str) -> bool:
     sandbox.run_command(f"cat << EOF > tests.py\n{tests}\nEOF")
     completed_process = sandbox.run_command("pytest tests.py")
     return completed_process.returncode == 0
+
+
+def fraction_tests_passed(sandbox: DockerSandbox, tests: str) -> bool:
+    sandbox.run_command(f"cat << EOF > tests.py\n{tests}\nEOF")
+
+    test_output = sandbox.run_command("pytest tests.py")
+
+    n_passed = len(
+        [line for line in test_output.stdout.splitlines() if "PASSED" in line]
+    )
+    n_failed = len(
+        [line for line in test_output.stdout.splitlines() if "FAILED" in line]
+    )
+
+    if n_passed == 0 and n_failed == 0:
+        raise ValueError(
+            f"Keywords PASSED and FAILED not found in the stdout of the test script. The expected behavior is that the test script should print, for each test, a line containing PASSED if it passes or a line containing FAILED if it fails. The output of the test script is: {test_output}"
+        )
+
+    return n_passed / (n_passed + n_failed)
 
 
 PUBLIC_TEST_REWARD: float = 0.2
@@ -72,9 +94,11 @@ PRIVATE_TEST_REWARD: float = 0.8
 class BashBenchEnv(BasicAgentEnv):
     def get_tools(self, data: dict) -> list[Tool]:
         start_time = perf_counter()
-        
+
         sandbox = DockerSandbox()
-        sandbox.run_command(f"cat << EOF > public_tests.py\n{data['public_tests']}\nEOF")
+        sandbox.run_command(
+            f"cat << EOF > public_tests.py\n{data['public_tests']}\nEOF"
+        )
 
         end_time = perf_counter()
         print("time spent creating sandbox:", end_time - start_time, "seconds")
@@ -82,34 +106,36 @@ class BashBenchEnv(BasicAgentEnv):
         return [BashTool(sandbox=sandbox)]
 
     def get_prompt(self, data: dict) -> str:
-        return data["task_description"].removeprefix("Task: ") + "\n\nYou can test whether what you did is correct by running `python public_tests.py`."
+        return (
+            data["task_description"].removeprefix("Task: ")
+            + "\n\nYou can test whether what you did is correct by running `python public_tests.py`."
+        )
 
     def get_reward(self, messages: list[Message], state: BasicAgentState) -> float:
         start_time = perf_counter()
 
-        bash_tool = next(
+        bash_tool: Tool = next(
             iter(tool for tool in state.tools if isinstance(tool, BashTool))
         )
         sandbox = bash_tool.sandbox
 
-        public_tests_passed: bool = tests_passed(
+        fraction_public_tests_passed: bool = fraction_tests_passed(  # tests_passed(
             sandbox=sandbox, tests=state.data["public_tests"]
         )
-        private_tests_passed: bool = tests_passed(
+        fraction_private_tests_passed: bool = fraction_tests_passed(  # tests_passed(
             sandbox=sandbox, tests=state.data["private_tests"]
         )
 
         sandbox.cleanup()
 
-        reward = 0.0
-        if public_tests_passed:
-            reward += PUBLIC_TEST_REWARD
-        if private_tests_passed:
-            reward += PRIVATE_TEST_REWARD
+        reward: float = (
+            fraction_public_tests_passed * PUBLIC_TEST_REWARD
+            + fraction_private_tests_passed * PRIVATE_TEST_REWARD
+        )
 
         end_time = perf_counter()
         print("time spent computing reward:", end_time - start_time, "seconds")
-        
+
         return reward
 
 
@@ -134,14 +160,12 @@ def main_2() -> None:
     from tqdm import tqdm
     from typing import Any
 
-
     @beartype
     def delayed(function: Callable) -> Callable[..., Callable[[], Any]]:
         def workload(*args, **kwargs) -> Callable:
             return lambda: function(*args, **kwargs)
 
         return workload
-
 
     @beartype
     def threaded_map(
@@ -162,10 +186,11 @@ def main_2() -> None:
                 results.append(future.result())
         return results
 
-
-    with open("/home/ubuntu/vlad/bash-bench/valid_tasks.json", "r") as f:
+    # with open("/home/ubuntu/vlad/bash-bench/valid_tasks.json", "r") as f:
     # with open("/home/ubuntu/vlad/bash-bench/valid_tasks-simplified.json", "r") as f:
-    # with open("/home/ubuntu/vlad/bash-bench/valid_tasks-simplified-even-more.json", "r") as f:
+    with open(
+        "/home/ubuntu/vlad/bash-bench/valid_tasks-simplified-even-more.json", "r"
+    ) as f:
         whole_dataset = json.load(f)
 
     llm = LLM(
@@ -189,7 +214,10 @@ def main_2() -> None:
             max_steps=max_steps,
         )
 
-        states = threaded_map((delayed(env.init_state)(datapoint) for datapoint in dataset), max_workers=32)
+        states = threaded_map(
+            (delayed(env.init_state)(datapoint) for datapoint in dataset),
+            max_workers=32,
+        )
         unfinished_states = states.copy()
         conversations = [[] for _ in dataset]
         unfinished_conversations = conversations.copy()
@@ -197,9 +225,11 @@ def main_2() -> None:
             next_messages_and_states = threaded_map(
                 (
                     delayed(env.get_next_prompt)(conversation, state)
-                    for conversation, state in zip(unfinished_conversations, unfinished_states, strict=True)
+                    for conversation, state in zip(
+                        unfinished_conversations, unfinished_states, strict=True
+                    )
                 ),
-                max_workers=32
+                max_workers=32,
             )
             finished_indices = []
             for i, (message, state) in enumerate(next_messages_and_states):
@@ -211,27 +241,41 @@ def main_2() -> None:
 
             new_messages = llm.chat(
                 unfinished_conversations,
-                sampling_params=SamplingParams(temperature=0.6, max_tokens=4096)
+                sampling_params=SamplingParams(temperature=0.6, max_tokens=4096),
             )
-            for output, conversation in zip(new_messages, unfinished_conversations, strict=True):
-                conversation.append({"role": "assistant", "content": output.outputs[0].text})
- 
-            unfinished_states = [state for i, state in enumerate(unfinished_states) if i not in finished_indices]
-            unfinished_conversations = [conversation for i, conversation in enumerate(unfinished_conversations) if i not in finished_indices]
+            for output, conversation in zip(
+                new_messages, unfinished_conversations, strict=True
+            ):
+                conversation.append(
+                    {"role": "assistant", "content": output.outputs[0].text}
+                )
+
+            unfinished_states = [
+                state
+                for i, state in enumerate(unfinished_states)
+                if i not in finished_indices
+            ]
+            unfinished_conversations = [
+                conversation
+                for i, conversation in enumerate(unfinished_conversations)
+                if i not in finished_indices
+            ]
 
         rewards = threaded_map(
             (
                 delayed(env.get_reward)(conversation, state)
                 for conversation, state in zip(conversations, states, strict=True)
             ),
-            max_workers=32
+            max_workers=32,
         )
 
         print("+" * 100)
         print("+" * 100)
         print("+" * 100)
         print("FINISHED EXECUTING AGENT LOOPS")
-        for i, (conversation, reward) in enumerate(zip(conversations, rewards, strict=True)):
+        for i, (conversation, reward) in enumerate(
+            zip(conversations, rewards, strict=True)
+        ):
             print("+" * 100)
             print("+" * 100)
             print("+" * 100)
@@ -285,4 +329,3 @@ def main_3() -> None:
                     continue
                 print(field.upper(), value)
             print("CONTENT:", message["content"])
-

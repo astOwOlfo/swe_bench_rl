@@ -4,17 +4,22 @@ source .env
 uv run ray stop
 uv run ray start --head --port 6380 --num-gpus 8 --num-cpus 32
 
+# , "env_vars": {"CUDA_LAUNCH_BLOCKING": "1"}
+
 uv run ray job submit --address="http://127.0.0.1:8265" \
-  --runtime-env-json='{"setup_commands": ["pip install openrlhf[vllm]"], "env_vars": {"CUDA_LAUNCH_BLOCKING": "1"}}' \
+  --runtime-env-json='{"setup_commands": ["pip install openrlhf[vllm]"]}' \
   --working-dir . \
   -- python -m openrlhf.cli.train_ppo_ray \
-  --ref_num_nodes 1 \
-  --ref_num_gpus_per_node 2 \
+   --ref_num_nodes 1 \
+  --ref_num_gpus_per_node 8 \
   --actor_num_nodes 1 \
-  --actor_num_gpus_per_node 4 \
+  --actor_num_gpus_per_node 8 \
   --vllm_num_engines 2 \
-  --vllm_tensor_parallel_size 1 \
-  --pretrain deepseek-ai/DeepSeek-R1-Distill-Qwen-32B \
+  --vllm_tensor_parallel_size 4 \
+  --colocate_all_models \
+  --vllm_gpu_memory_utilization 0.6 \
+  --vllm_enable_sleep \
+  --pretrain deepseek-ai/DeepSeek-R1-Distill-Qwen-7B \
   --save_path checkpoint/dummy_rl \
   --micro_train_batch_size 1 \
   --train_batch_size 8 \
@@ -43,7 +48,10 @@ uv run ray job submit --address="http://127.0.0.1:8265" \
   --advantage_estimator grpo \
   --env_file bash_bench_env \
   --env_class BashBenchEnv \
-  --eval_steps 0 \
+  --eval_steps -1 \
+  --use_kl_loss \
+  --use_kl_estimator_k3 \
+  --enforce_eager \
 
 # the following relationship should be verified:
 # micro_train_batch_size * gradient_accumulation_steps * actor num_nodes == train_batch_size

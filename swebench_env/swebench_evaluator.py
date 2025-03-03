@@ -337,6 +337,15 @@ def swe_bench_solution_evaluation_score(container: Container, datapoint: dict) -
     container.exec_run("chmod +x ./eval_script")
     eval_script_output = container.exec_run("./eval_script").output
 
+    print("=" * 250)
+    print("=== EVAL SCRIPT STDOUT ===")
+    print(eval_script_output.stdout)
+    print("=== EVAL SCRIPT STDERR ===")
+    print(eval_script_output.stderr)
+    print("=== EVAL SCRIPT EXIT CODE ===")
+    print(eval_script_output.returncode)
+    
+
     score, score_explanation = get_score_and_explanation_from_test_output(
         test_output=eval_script_output.decode("utf-8"),
         state=TaskState(

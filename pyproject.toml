@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "torch==2.5.1",
-    "openrlhf[vllm_latest]",
+    "openrlhf[vllm]",
     "ray[train]>=2.12.0",
     "datasets>=3.2.0",
     "mypy>=1.14.1",
@@ -35,4 +35,4 @@ packages = []
 
 [tool.uv.sources]
 inspect_evals = { git = "https://github.com/UKGovernmentBEIS/inspect_evals" }
-openrlhf = { git = "https://github.com/JYudelson1/OpenRLHF-reward-hacking", branch="no-mask" }
+openrlhf = { git = "https://github.com/JYudelson1/OpenRLHF-reward-hacking", branch="merged" }
