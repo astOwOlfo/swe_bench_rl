@@ -73,7 +73,7 @@ def fraction_tests_passed(sandbox: DockerSandbox, tests: str) -> bool:
     test_output = sandbox.run_command("pytest tests.py")
     test_output = test_output.stdout
 
-    failed_passed_matches = re.findall(r'(\d+) failed, (\d+) passed in', test_output)
+    failed_passed_matches = re.findall(r"(\d+) failed, (\d+) passed in", test_output)
     if failed_passed_matches:
         n_failed, n_passed = failed_passed_matches[-1]
         n_failed = int(n_failed)
@@ -82,8 +82,8 @@ def fraction_tests_passed(sandbox: DockerSandbox, tests: str) -> bool:
             return 0.0
             # raise ValueError("The bash bench task has zero tests.")
         return n_passed / (n_failed + n_passed)
-    
-    failed_matches = re.findall(r'(\d+) failed in', test_output)
+
+    failed_matches = re.findall(r"(\d+) failed in", test_output)
     if failed_matches:
         n_failed = failed_matches[-1]
         n_failed = int(n_failed)
@@ -92,7 +92,7 @@ def fraction_tests_passed(sandbox: DockerSandbox, tests: str) -> bool:
             # raise ValueError("The bash bench task has zero tests.")
         return 0.0
 
-    passed_matches = re.findall(r'(\d+) passed in', test_output)
+    passed_matches = re.findall(r"(\d+) passed in", test_output)
     if passed_matches:
         n_passed = passed_matches[-1]
         n_passed = int(n_passed)
@@ -100,9 +100,10 @@ def fraction_tests_passed(sandbox: DockerSandbox, tests: str) -> bool:
             return 0.0
             # raise ValueError("The bash bench task has zero tests.")
         return 1.0
-    
+
     return 0.0
     # raise ValueError(f"Could not parse pytest output. The output is: {test_output}")
+
 
 PUBLIC_TEST_REWARD: float = 0.2
 PRIVATE_TEST_REWARD: float = 0.8
@@ -348,3 +349,21 @@ def main_3() -> None:
                     continue
                 print(field.upper(), value)
             print("CONTENT:", message["content"])
+
+
+@beartype
+def main_4() -> None:
+    from openai import OpenAI
+
+    with open("/home/ubuntu/vlad/data/bash-bench/easy-bash-bench.json") as f:
+        dataset = json.load(f)
+
+    environment = BashBenchEnv(
+        full_data=dataset, sampling_params=None, vllm_engine=None
+    )
+
+    environment.run_agent_loops_with_anthropic_or_openai(
+        client=OpenAI(api_key="dummy"),
+        model="NousResearch/Meta-Llama-3-8B-Instruct",
+        base_url="http://localhost:8000/v1",
+    )
