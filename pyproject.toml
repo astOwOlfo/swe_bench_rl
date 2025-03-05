@@ -35,4 +35,5 @@ packages = []
 
 [tool.uv.sources]
 inspect_evals = { git = "https://github.com/UKGovernmentBEIS/inspect_evals" }
-openrlhf = { git = "https://github.com/JYudelson1/OpenRLHF-reward-hacking", branch="merged" }
+# openrlhf = { git = "https://github.com/JYudelson1/OpenRLHF-reward-hacking", branch="merged" }
+openrlhf = { path = "/home/ubuntu/vlad/OpenRLHF-reward-hacking/", editable = true }
