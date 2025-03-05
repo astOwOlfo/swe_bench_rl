@@ -381,7 +381,6 @@ class BasicAgentEnv(AgentInterface):
 
         assert messages[-1]["role"] == "assistant"
         tool_calls: list[ToolCall] = extract_tool_calls(messages[-1]["content"])
-        tool_calls.append(ToolCall(tool_name="bash", arguments="echo hello"))
 
         if len(tool_calls) == 0:
             messages.append(
