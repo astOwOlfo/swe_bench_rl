@@ -364,5 +364,5 @@ def main_4() -> None:
 
     environment.run_agent_loops_with_anthropic_or_openai(
         client=OpenAI(api_key="dummy", base_url="http://localhost:8000/v1"),
-        model="NousResearch/Meta-Llama-3-8B-Instruct",
+        model="Qwen/Qwen2.5-Coder-7B-Instruct",
     )
