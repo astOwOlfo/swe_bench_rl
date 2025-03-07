@@ -1,12 +1,12 @@
 set -x
 source .env
 
-uv run ray stop
-uv run ray start --head --port 6380 --num-gpus 8 --num-cpus 32
+/root/.local/bin/uv run ray stop
+/root/.local/bin/uv run ray start --head --port 6380 --num-gpus 8 --num-cpus 32
 
 # , "env_vars": {"CUDA_LAUNCH_BLOCKING": "1"}
 
-uv run ray job submit --address="http://127.0.0.1:8265" \
+/root/.local/bin/uv run ray job submit --address="http://127.0.0.1:8265" \
   --runtime-env-json='{"setup_commands": ["pip install openrlhf[vllm]"]}' \
   --working-dir . \
   -- python -m openrlhf.cli.train_ppo_ray \
