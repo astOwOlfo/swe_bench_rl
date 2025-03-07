@@ -1,3 +1,3 @@
-uv pip install torch
-uv sync --no-install-package flash-attn
-uv sync --no-build-isolation
+/root/.local/bin/uv pip install torch
+/root/.local/bin/uv sync --no-install-package flash-attn
+/root/.local/bin/uv sync --no-build-isolation
