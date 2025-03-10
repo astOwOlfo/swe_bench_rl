@@ -16,6 +16,7 @@ dependencies = [
     "inspect_ai",
     "inspect_evals[swe_bench]",
     "xgrammar==0.1.11",
+    "pymongo>=4.11.2",
 ]
 
 [build-system]
