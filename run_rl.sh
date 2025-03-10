@@ -1,9 +1,6 @@
 set -x
 source .env
 
-/root/.local/bin/uv run ray stop
-/root/.local/bin/uv run ray start --head --port 6380 --num-gpus 8 --num-cpus 32
-
 # , "env_vars": {"CUDA_LAUNCH_BLOCKING": "1"}
 
 /root/.local/bin/uv run ray job submit --address=$RAY_ADDRESS \
