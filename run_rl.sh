@@ -6,16 +6,18 @@ source .env
 
 # , "env_vars": {"CUDA_LAUNCH_BLOCKING": "1"}
 
-/root/.local/bin/uv run ray job submit --address="http://127.0.0.1:8265" \
+/root/.local/bin/uv run ray job submit --address=$RAY_ADDRESS \
   --runtime-env-json='{"setup_commands": ["pip install openrlhf[vllm]"]}' \
   --working-dir . \
   -- python -m openrlhf.cli.train_ppo_ray \
   --ref_num_nodes 1 \
-  --ref_num_gpus_per_node 2 \
+  --ref_num_gpus_per_node 4 \
   --actor_num_nodes 1 \
   --actor_num_gpus_per_node 4 \
-  --vllm_num_engines 1 \
-  --vllm_tensor_parallel_size 2 \
+  --vllm_num_engines 2 \
+  --vllm_tensor_parallel_size 4 \
+  --vllm_sync_backend gloo \
+  --vllm_sync_with_ray \
   --pretrain deepseek-ai/DeepSeek-R1-Distill-Qwen-7B \
   --save_path checkpoint/dummy_rl \
   --micro_train_batch_size 1 \
