@@ -101,13 +101,16 @@ class DockerSandbox:
             capture_output=True,
             text=True
         )
+        print(f"{docker_stop_response=}")
 
         docker_remove_response = subprocess.run(
             ["docker", "rm", self.container_name],
             capture_output=True,
             text=True
         )
+        print(f"{docker_remove_response=}")
 
+        """
         process = subprocess.Popen(
             f"docker stop {self.container_name}; docker rm {self.container_name}",
             shell=True,
@@ -115,3 +118,4 @@ class DockerSandbox:
             stderr=subprocess.PIPE,
             text=True,
         )
+        """
