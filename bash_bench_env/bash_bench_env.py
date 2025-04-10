@@ -114,13 +114,9 @@ class BashBenchEnv(BasicAgentEnv):
     def get_tools(self, data: dict) -> list[Tool]:
         start_time = perf_counter()
 
-        sandbox = DockerSandbox()
         sandbox.run_command(
             f"cat << EOF > public_tests.py\n{data['public_tests']}\nEOF"
         )
-
-        end_time = perf_counter()
-        print("time spent creating sandbox:", end_time - start_time, "seconds")
 
         return [BashTool(sandbox=sandbox)]
 
@@ -131,8 +127,6 @@ class BashBenchEnv(BasicAgentEnv):
         )
 
     def get_reward(self, messages: list[Message], state: BasicAgentState) -> float:
-        start_time = perf_counter()
-
         bash_tool: Tool = next(
             iter(tool for tool in state.tools if isinstance(tool, BashTool))
         )
@@ -151,9 +145,6 @@ class BashBenchEnv(BasicAgentEnv):
             fraction_public_tests_passed * PUBLIC_TEST_REWARD
             + fraction_private_tests_passed * PRIVATE_TEST_REWARD
         )
-
-        end_time = perf_counter()
-        print("time spent computing reward:", end_time - start_time, "seconds")
 
         return reward
 
